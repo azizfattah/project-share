@@ -1,0 +1,64 @@
+body{
+  width: 100% !important;
+}
+.welcome-email-editor-background {
+  padding: 20px;
+}
+.marketplace-title-header h1{
+  text-align: right !important;
+}
+.row:after, .row-with-divider:after {
+    content: "";
+    display: inline-table !important;
+    clear: both;
+}
+.toggle-menu a{
+  text-align: right;
+}
+.pull-right{
+  float: right !important;
+}
+[class*=col-]:first-child {
+    padding-right: 0;
+    padding-left: 1em;
+}
+
+.left-navi{
+  position: relative !important;
+  float: left;
+}
+.left-navi a {
+  padding: 0.375em 2em;
+}
+.header-left{
+  float: right;
+}
+.header-right{
+  float: left;
+}
+.people-fluid-thumbnail-grid-item, .home-fluid-thumbnail-grid-item{
+  float: right !important;
+}
+.home-toolbar-button-group{
+  float: left !important;
+}
+.home-fluid-thumbnail-grid-author-name{
+  right: 45px !important;
+}
+
+form .checkbox-container input[type=radio] {
+    right: 0em;
+}
+form .checkbox-container input[type=checkbox] {
+    right: 0em;
+}
+form .checkbox-container label {
+    padding: 0 2em 0 1.5em;
+}
+form .checkbox-container label.radio {
+    margin-right: 2em;
+}
+.fileinput-button input {
+  height: 100%;
+  width: 100%;
+}
