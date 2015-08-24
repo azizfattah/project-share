@@ -1,0 +1,27 @@
+[Thu Aug 20 23:02:01.832 2015] [ 2688] watchdog: main process 2689 forked ok
+[Thu Aug 20 23:02:01.855 2015] [ 2689] listening on all interfaces, port=3563
+[Thu Aug 20 23:02:01.900 2015] [ 2689] binlog: replaying log /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001
+[Thu Aug 20 23:02:01.901 2015] [ 2689] binlog: replay stats: 0 rows in 0 commits; 0 updates, 0 reconfigure; 0 indexes
+[Thu Aug 20 23:02:01.901 2015] [ 2689] binlog: finished replaying /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001; 0.0 MB in 0.000 sec
+[Thu Aug 20 23:02:01.901 2015] [ 2689] binlog: finished replaying total 1 in 0.001 sec
+[Thu Aug 20 23:02:01.921 2015] [ 2689] accepting connections
+[Thu Aug 20 23:07:22.514 2015] [ 2689] caught SIGTERM, shutting down
+[Thu Aug 20 23:07:22.678 2015] [ 2689] shutdown complete
+[Fri Aug 21 17:47:09.751 2015] [ 8725] watchdog: main process 8726 forked ok
+[Fri Aug 21 17:47:09.795 2015] [ 8726] listening on all interfaces, port=3563
+[Fri Aug 21 17:47:09.897 2015] [ 8726] binlog: replaying log /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001
+[Fri Aug 21 17:47:09.899 2015] [ 8726] binlog: replay stats: 0 rows in 0 commits; 0 updates, 0 reconfigure; 0 indexes
+[Fri Aug 21 17:47:09.899 2015] [ 8726] binlog: finished replaying /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001; 0.0 MB in 0.000 sec
+[Fri Aug 21 17:47:09.899 2015] [ 8726] binlog: replaying log /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001
+[Fri Aug 21 17:47:09.899 2015] [ 8726] binlog: replay stats: 0 rows in 0 commits; 0 updates, 0 reconfigure; 0 indexes
+[Fri Aug 21 17:47:09.899 2015] [ 8726] binlog: finished replaying /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001; 0.0 MB in 0.000 sec
+[Fri Aug 21 17:47:09.899 2015] [ 8726] binlog: finished replaying total 2 in 0.002 sec
+[Fri Aug 21 17:47:09.900 2015] [ 8726] accepting connections
+[Fri Aug 21 18:30:22.983 2015] [ 8726] caught SIGHUP (seamless=1, in queue=1)
+[Fri Aug 21 18:30:23.113 2015] [ 8726] rotating index 'listing_delta': started
+[Fri Aug 21 18:30:23.160 2015] [ 8726] WARNING: binlog: failed to unlink /Users/smahalzaydy/sharetribe/tmp/binlog/development/binlog.001: No such file or directory (remove it manually)
+[Fri Aug 21 18:30:23.208 2015] [ 8726] last message repeated 1 times
+[Fri Aug 21 18:30:23.208 2015] [ 8726] rotating index 'listing_delta': success
+[Fri Aug 21 18:30:23.225 2015] [ 8726] rotating index: all indexes done
+[Fri Aug 21 18:50:42.889 2015] [ 8726] caught SIGTERM, shutting down
+[Fri Aug 21 18:50:43.040 2015] [ 8726] shutdown complete
