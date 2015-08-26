@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-ruby '2.1.2'
+ruby '2.2.2'
 
 gem 'rails', '3.2.21'
 
@@ -38,7 +38,7 @@ gem 'aws-sdk', '~> 2'
 gem "will_paginate"
 gem 'dalli'
 gem "memcachier"
-gem 'kgio', "~>2.8.0"
+gem 'kgio', ">= 2.9.3"
 gem 'thinking-sphinx', '~> 3.1.1'
 gem 'flying-sphinx', "~>1.2.0"
 # Use patched v2.0.2
@@ -84,6 +84,7 @@ gem 'airbrake', '~>4.1.0'
 gem 'cache_digests'
 
 gem 'lograge'
+gem "nokogiri", ">= 1.6.6.2"
 
 group :staging, :production do
   gem 'newrelic_rpm', '~> 3.9.1.236'
@@ -127,6 +128,7 @@ group :test do
   gem 'database_cleaner'
   gem 'connection_pool'
   gem 'coveralls', require: false
+  gem 'test-unit'
 end
 
 group :development, :test do
