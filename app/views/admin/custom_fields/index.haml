@@ -17,7 +17,7 @@
       = t(".listing_fields")
 
     = render :partial => "layouts/info_text", :locals => { :text => t(".listing_fields_help")}
-    - puts "Line 20 #{@custom_fields.inspect}"
+
     - show_custom_fields = !@custom_fields.empty?
 
   #custom-fields-list

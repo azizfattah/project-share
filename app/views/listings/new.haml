@@ -12,13 +12,12 @@
 #new_listing_form.new-listing-form.centered-section
 
   #selected-groups
-    - puts "Line 15 #{categories.inspect}"
     - if categories.size > 1
       .selected-group{:name => "category"}
         - categories.each do |value|
           %a.select.selected.hidden{:data => {:id => value.id}}
             .link-text= t(".selected_category", :category => value.display_name(I18n.locale))
-    - puts "Line 21 #{subcategories.inspect}"
+
     - if subcategories.size > 1
       .selected-group{:name => "subcategory"}
         - subcategories.each do |value|
