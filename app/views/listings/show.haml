@@ -9,6 +9,7 @@
 - content_for :title, raw(@listing.title)
 - content_for :meta_author, @listing.author.name(@current_community)
 - content_for :meta_description, StringUtils.first_words(@listing.description, 15)
+- puts "Line 12 #{@listing.inspect}, #{@listing.listing_images.inspect}"
 - content_for :meta_image, @listing.listing_images.first.image.url(:medium) if !@listing.listing_images.empty?
 - dimensions = @listing.listing_images.first.get_dimensions_for_style(:medium) if !@listing.listing_images.empty?
 - content_for :meta_image_width, dimensions[:width].to_s if !@listing.listing_images.empty?
