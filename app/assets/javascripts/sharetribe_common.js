@@ -53,6 +53,7 @@ function disable_submit_button(form_id, locale) {
 
 function auto_resize_text_areas(class_name) {
   $('textarea.' + class_name).autosize();
+  //autosize($('textarea.' + class_name));
 }
 
 function translate_validation_messages(locale) {
