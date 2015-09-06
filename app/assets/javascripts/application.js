@@ -58,7 +58,7 @@
 //= require admin/emails.js
 //= require payment_math
 //= require dropdown
-//= require jquery.nouislider
+//= require nouislider.min
 //= require range_filter
 //= require translations
 //= require image_uploader

@@ -38,18 +38,21 @@ window.ST.rangeFilter = function(selector, range, start, labels, fields, decimal
 
 
   var step = numberOfDecimals();
+  var slider = $(selector)[0];
 
-  $(selector).noUiSlider({
+  noUiSlider.create(slider, {
     range: range,
     step: step,
     start: [start[0], start[1]],
     connect: true,
-    serialization: {
-      resolution: step,
-      to: [
-        [$(fields[0]), updateLabel($(labels[0]))],
-        [$(fields[1]), updateLabel($(labels[1]))]
-      ]
+    direction: $("body").css("direction")
+  });
+
+  slider.noUiSlider.on('update', function ( values, handle ) {
+    if ( !handle ) {
+      $(labels[0]).html(values[handle]);
+    } else {
+      $(labels[1]).html(values[handle]);
     }
   });
 };

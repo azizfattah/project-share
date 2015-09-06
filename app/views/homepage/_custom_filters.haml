@@ -26,14 +26,14 @@
         .custom-filter-options
           - id = ["range-slider", field.id].join("-")
           .range-slider{id: id}
-            - range = [field.min, field.max]
+            - range = {:min => field.min, :max => field.max}
             - start = [params["nf_min_" + field.id.to_s] || field.min, params["nf_max_" + field.id.to_s] || field.max]
             - labels = ["#custom-filter-min-value-#{id}", "#custom-filter-max-value-#{id}"]
             - fields = ["#nf_min_#{id}", "#nf_max_#{id}"]
 
             - content_for :extra_javascript do
               :javascript
-                window.ST.rangeFilter("##{id}", #{range}, #{start}, #{labels}, #{fields}, #{field.allow_decimals})
+                window.ST.rangeFilter("##{id}", #{range.to_json}, #{start}, #{labels}, #{fields}, #{field.allow_decimals})
 
     .row
       .col-12
