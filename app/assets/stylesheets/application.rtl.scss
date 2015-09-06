@@ -24,3 +24,16 @@ body {
 .datepicker-start-wrapper {
   float: right;
 }
+
+.header-right-locates {
+  position: relative;
+
+  #header-locales-toggle-menu {
+    right: 0;
+    left: auto;
+
+    a {
+      text-align: left;
+    }
+  }
+}
