@@ -13,7 +13,8 @@ window.ST = window.ST || {};
       inputs: [$("#start-on"), $("#end-on")],
       onRender: function(date) {
         return date.valueOf() < today.valueOf() ? 'disabled' : '';
-      }
+      },
+      rtl: dateRage.css("direction") == "rtl"
     };
 
     if(dateLocale !== 'en') {
