@@ -1,6 +1,6 @@
 = render :partial => 'layouts/head'
 
-%body{:class => "locale-#{I18n.locale}"}
+%body{:class => "locale-#{I18n.locale} #{controller_path.gsub("/", "-")} #{action_name}"}
 
   %noscript
     .noscript-padding

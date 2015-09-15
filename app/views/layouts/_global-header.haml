@@ -18,7 +18,7 @@
       = render :partial => "layouts/header_right_visible_tablet", locals: {unread_count: unread_count, user: user}
 
     - with_available_locales do |locales|
-      .header-right.visible-desktop
+      .header-right.visible-desktop.header-right-locates
         #header-locales-menu.toggle.header-hover{data: {toggle: '#header-locales-toggle-menu', 'toggle-position' => 'absolute'}}
           %span.header-text-link
             = get_full_locale_name(I18n.locale).to_s
