@@ -3,7 +3,7 @@
 
 = render :partial => 'layouts/head'
 
-%body
+%body{:class => "locale-#{I18n.locale} #{Utils.is_rtl_locale? ? "rtl" : ""}"}
   = yield
 
   = javascript_include_tag 'application'

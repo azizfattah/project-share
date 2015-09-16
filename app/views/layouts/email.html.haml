@@ -1,10 +1,10 @@
 !!!
 
-%html
+%html{:lang => I18n.locale, :dir => "#{Utils.is_rtl_locale? ? "rtl" : ""}"}
 
   = render 'layouts/email_head'
 
-  %body
+  %body{:class => "locale-#{I18n.locale} #{Utils.is_rtl_locale? ? "rtl" : ""}"}
 
     %table{:cellspacing => "0", :border => "0", :height => "100%", :bgcolor => "#ffffff", :cellpadding => "0", :width => "100%"}
       %tbody>
