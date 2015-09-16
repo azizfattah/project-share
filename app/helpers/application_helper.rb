@@ -899,4 +899,17 @@ module ApplicationHelper
   def current_direction
     I18n.locale.to_s == 'ar' ? 'rtl' : ''
   end
+
+  def adjust_stylesheet_file_name(css_url)
+    if Utils.is_rtl_locale? 
+      if (css_url =~ /\.css$/i || css_url =~ /\.css\.gz$/i)
+        tmp = css_url.split(".css")
+        tmp[0] + ".rtl.css" + tmp[1].to_s
+      else
+        css_url + ".rtl"
+      end
+    else
+      css_url
+    end
+  end
 end

@@ -9,6 +9,8 @@
 module CommunityStylesheetCompiler
   SOURCE_DIR = "app/assets/stylesheets"
   TARGET_DIR = "public/assets"
+  LTR_SOURCE_FILE = "application.scss"
+  RTL_SOURCE_FILE = "application.rtl.scss"
   VARIABLE_FILE = "mixins/default-colors.scss"
   S3_PATH = "assets/custom"
 
@@ -36,14 +38,17 @@ module CommunityStylesheetCompiler
       variable_hash = create_variable_hash(community)
       target_file_basename = create_new_filename(community.ident)
       target_file_extension = use_gzip? ? "css.gz" : "css"
-      target_file_path = "public/assets/#{target_file_basename}.#{target_file_extension}"
+      ltr_target_file_path = "public/assets/#{target_file_basename}.#{target_file_extension}"
+      rtl_target_file_path = "public/assets/#{target_file_basename}.rtl.#{target_file_extension}"
 
-      StylesheetCompiler.compile(SOURCE_DIR, application_css_file, target_file_path, VARIABLE_FILE, variable_hash)
+      StylesheetCompiler.compile(SOURCE_DIR, LTR_SOURCE_FILE, ltr_target_file_path, VARIABLE_FILE, variable_hash)
+      StylesheetCompiler.compile(SOURCE_DIR, RTL_SOURCE_FILE, rtl_target_file_path, VARIABLE_FILE, variable_hash)
 
       # Save URL without extension for Rails helpers
 
       url = if ApplicationHelper.use_s3?
-        sync(target_file_path, target_file_basename)
+        sync(rtl_target_file_path, target_file_basename)
+        sync(ltr_target_file_path, target_file_basename)
       else
         # Save file without extension for Rails helpers
         target_file_basename

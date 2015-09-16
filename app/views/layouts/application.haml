@@ -1,6 +1,6 @@
 = render :partial => 'layouts/head'
 
-%body{:class => "locale-#{I18n.locale}"}
+%body{:class => "locale-#{I18n.locale} #{Utils.is_rtl_locale? ? "rtl" : ""}"}
 
   %noscript
     .noscript-padding
