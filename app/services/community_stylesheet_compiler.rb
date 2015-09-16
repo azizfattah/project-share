@@ -8,7 +8,6 @@
 #
 module CommunityStylesheetCompiler
   SOURCE_DIR = "app/assets/stylesheets"
-  SOURCE_FILE = "application.scss"
   TARGET_DIR = "public/assets"
   VARIABLE_FILE = "mixins/default-colors.scss"
   S3_PATH = "assets/custom"
@@ -39,7 +38,7 @@ module CommunityStylesheetCompiler
       target_file_extension = use_gzip? ? "css.gz" : "css"
       target_file_path = "public/assets/#{target_file_basename}.#{target_file_extension}"
 
-      StylesheetCompiler.compile(SOURCE_DIR, SOURCE_FILE, target_file_path, VARIABLE_FILE, variable_hash)
+      StylesheetCompiler.compile(SOURCE_DIR, application_css_file, target_file_path, VARIABLE_FILE, variable_hash)
 
       # Save URL without extension for Rails helpers
 
@@ -142,6 +141,10 @@ module CommunityStylesheetCompiler
       community_ident = ident.gsub(".", "_")
       timestamp = Time.now.strftime("%Y%m%d%H%M%S")
       "custom-style-#{community_ident}-#{timestamp}"
+    end
+
+    def application_css_file
+      Utils.is_rtl_locale? ? "application.rtl.scss" : "application.scss"
     end
   end
 end

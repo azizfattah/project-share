@@ -857,7 +857,7 @@ module ApplicationHelper
       stylesheet = community.custom_stylesheet_url
       is_uri?(stylesheet)  ? stylesheet : "/assets/#{stylesheet}"
     else
-      if ["ar"].include?(I18n.locale.to_s)
+      if Utils.is_rtl_locale?
         "application.rtl"
       else
         'application'
