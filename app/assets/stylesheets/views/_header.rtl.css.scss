@@ -147,6 +147,12 @@ $elementSpacing: lines(0.5);
 
 .header-toggle-menu-menu {
   @include header-toggle-menu;
+  right: 0;
+  left: auto;
+}
+
+.rtl .toggle-menu .toggle-menu-title {
+  text-align: right;
 }
 
 .header-inbox-link {
