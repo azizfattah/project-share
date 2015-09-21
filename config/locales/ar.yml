@@ -599,7 +599,7 @@ ar:
     details:
       day: يوم
       days: أيام
-      price_per_day: "السعر لكل يوم:  %{price}"
+      price_per_day: "السعر في اليوم:  %{price}"
     index:
       loading_more_messages: "عرض المزيد من الرسائل"
       message_partitive: رسالة
@@ -854,15 +854,15 @@ ar:
     confirmation_instructions:
       confirmation_instructions_signature: "أفضل التقديرات، <br/>لفريق %{service_name} "
       welcome_to_kassi: "مرحبا بك إلى %{service_name}!"
-      need_to_confirm: "تحتاج إلى تأكيد عنوان بريدك الإلكتروني."
-      confirmation_link_text: "تأكيد بريدي الإلكتروني"
-      or_paste_link: "بدلا من ذلك قم بنسخ الرابط التالي إلى شريط العنوان في المتصفح لديك:"
+      need_to_confirm: "الثقة والسلامة مهمة للغاية في قاربوت، لذلك نحن نطلب من أعضائنا التحقق من عنواين بريدهم الالكتروني. الرجاء تفعيل عضويتك ، وسوف نراك قريبا في البحر."
+      confirmation_link_text: "تفعيل عضويتك"
+      or_paste_link: "أو قم بنسخ الرابط التالي إلى شريط العنوان في المتصفح لديك:"
       turning_on_confirmations_in_this_community: " بدأنا باستخدام تأكيدات البريد الإلكتروني في سوق %{service_name}."
     common:
       check_your_settings: "افحص اعداداتك"
-      hey: "Hello %{name},"
+      hey: "مرحبا %{name},"
       kassi_team: "فريق %{service_name}"
-      thanks: "شكرًا،"
+      thanks: "شكراً،"
       want_to_control_emails: "هل ترغب في تخصيص أي الرسائل التي تريد استقبالها من  %{service_name}?"
       dont_want_to_receive_these_emails: "لا تريد استقبال البريد الإلكتروني هذا؟"
       edit_your_email_settings_here: "عدل إعدادت البريد الإلكتروني من هنا."
@@ -941,7 +941,7 @@ ar:
       title_link_text: "%{community_name}"
       intro_paragraph: "هذه بعض الأشياء التي حدث على %{community_link} خلال الفترة الماضية %{time_since_last_update}."
       intro_paragraph_link_text: "%{community_name}"
-      post_a_new_listing: "اضف عرضك!"
+      post_a_new_listing: "أضف قاربك!"
       reduce_email_footer_text: "هل هناك رسائل بريد كثيرة؟ %{settings_link} أو %{unsubscribe_link}."
       settings_link_text: "عدل إعدادات البريد الإلكتروني من هنا"
       unsubscribe_link_text: إلغاء الاشتراك
@@ -969,9 +969,9 @@ ar:
       click_here_to_reply: "انقر هنا للاستجابة للطلب"
     welcome_email:
       welcome_email_subject: "مرحبا بك إلى %{service_name}"
-      welcome_to_marketplace: "مرحبا بك إلى %{service_name}! سعيد بوجودك في جدار السوق."
-      love_marketplace_crew: "مودة, طاقم <br /><i>%{service_name} </i>"
-      p_s_did_you_know: "P.S. هل تريد إنشاء موقع لسوقك مثل %{service_name}? سهل جدا ولا يتطلب أي معرفة بالبرمجة %{click_here_link} لتكتشف المزيد!"
+      welcome_to_marketplace: "مبروك -- أنت الان عضو في أفضل نادي للقوارب في العالم. سواء كنت صاحب قارب، أو كنت ترغب في تقضية يوم في البحر، فإنة يوجد مكان لك في مجتمعنا."
+      love_marketplace_crew: "مع اطيب التحيات, طاقم <br /><i>%{service_name} </i>"
+      p_s_did_you_know: "إذا كان لديك أي أسئلة أو اقتراحات، من فضلك لا تتردد في %{contact_admin_link}."
       click_here_link_text: "انقر هنا"
       welcome_email_footer_text: "ما هو نوع البريد الذي تريد تلقيه من %{service_name}? %{settings_link}"
       settings_link_text: "قم بضبط اعداداتك"
@@ -1138,8 +1138,8 @@ ar:
       some_private_requests_exist: "توجد عدة <b>%{number_of_listings} طلبات</b>,"
     custom_filters:
       update_view: "رؤية التحديث"
-      min: "Min:"
-      max: "Max:"
+      min: "من:"
+      max: "إلى"
     event_feed:
       latest_events: "مالذي يحدث"
     grid_item:
@@ -1154,7 +1154,7 @@ ar:
       is: هذا
       are: هذه
       what_do_you_need: "مالذي تبحث عنه"
-      post_new_listing: "اضف عرض جديد"
+      post_new_listing: "أضف قارب جديد"
       are_offering: عرض
       add_news_item: "اضف مقال"
       lend_rent_help_carpool: "بيع إقراض، مساعدة، مشاركة rides "
@@ -1282,7 +1282,7 @@ ar:
       sign_up: "التسجيل بالموقع"
     notifications:
       listing_could_not_be_saved: "لم نتمكن من حفظ عرضك. الرجاء المحاولة مرة اخرى. اذا استمرت المشكلة, من فضلك %{contact_admin_link}."
-      contact_admin_link_text: "تواصل مع الادارة"
+      contact_admin_link_text: "الإتصال بفريق الدعم"
       test_welcome_email_delivered_to: "تم ارسالة بريد الكتروني للتأكيد %{email}."
       something_went_wrong: "حدث خطأ ما"
       community_updated: "تم تحديق التفاصيل."
@@ -1577,13 +1577,13 @@ ar:
       booking_to: إلى
       how_paypal_works: "كيف تعمل payPal"
     new:
-      post_a_new_listing: "اضف عرض جديد"
+      post_a_new_listing: "أضف قارب جديد"
       listing: معروض
       selected_category: "الفئة: %{category}"
       selected_subcategory: "الفئة الفرعية: %{subcategory}"
       selected_transaction_type: "نوع المعروض: %{transaction_type}"
       select_category: "اختر الفئة"
-      select_subcategory: "اختر الفئة الفرعية"
+      select_subcategory: "اختر الشركة المصنعة"
       select_transaction_type: "اختر نوع المعروض"
       you_need_to_fill_payout_details_before_accepting: "تحتاج لتعبئة تفاصيل الصرف قبل نشر المعروض. اذهب إلى %{payment_settings_link} لتعبئة التفاصيل."
       contact_admin_link_text: "اتصل بالمدير"
@@ -1636,7 +1636,7 @@ ar:
       listing_created_at: "أنشئ المعروض"
       price:
         per_quantity_unit: "لكل %{quantity_unit}"
-        per_day: "لكل يوم"
+        per_day: "في اليوم"
       delivery: "طريقة التوصيل"
       shipping: "الشحن (+%{price})"
       shipping_no_price: الشحن
@@ -1784,7 +1784,7 @@ ar:
       enter_captcha: "أنا إنسان:"
       family_name: "اسم العائلة"
       given_name: "الاسم الأول"
-      i_accept_the: "اقبل ال"
+      i_accept_the: "أقبل"
       invalid_invitation_code: "رمز الدعوة غير فعال."
       invitation_code: "رمز الدعوة"
       not_required: ",اختياري"
@@ -1887,9 +1887,9 @@ ar:
       we_will_not_post_without_asking_you: "لن نقوم بالنشر أبدا إلى الفيس بوك دون أن يطلب منك."
     password_forgotten:
       email: البريد الالكتروني
-      password_recovery_instructions: "أدخل عنوان بريدك الإلكتروني للحصول على اسم المستخدم وكلمة السر الخاصة بك إعادة تعيين."
-      request_new_password: "طلي كلمة مرور جديدة"
-      change_your_password: "تغييز كلمة المرور"
+      password_recovery_instructions: "أدخل عنوان بريدك الإلكتروني للحصول على اسم المستخدم وإعادة تعيين كلمة السر الخاصة بك ."
+      request_new_password: "طلب كلمة مرور جديدة"
+      change_your_password: "تغيير كلمة المرور"
     confirmation_pending:
       welcome_to_kassi: "مرحبا بك في %{service_name}!"
       check_your_email: "راجع بريدك الالكتروني"
@@ -1911,8 +1911,8 @@ ar:
       email_addresses: "البريد الالكتروني"
       new_email: "بريد الكتروني جديد"
       delete_all_memberships: "إذا حذفت حسابك، فلن تكون قادرا على استخدامه مرة أخرى في الأسواق التالية: %{marketplaces}."
-      delete_personal_information: "إذا قمت بحذف حسابك، المعلومات الشخصية الخاصة بك (الاسم، رقم الهاتف والعنوان والبريد الإلكتروني، وصورة للملف الشخصي، وما إلى ذلك) سيتم حذفها بشكل دائم ولا يمكن استردادها. سيتم إزالة كافة المعروضات التي قمت بإنشائها. فلن تكون قادرة على إعادة تفعيل حسابك."
-      delete_information_others_involved: "المعلومات التي يتم تشاركها مع الأعضاء الآخرين ملطوبة (المحادثات مع الأعضاء الأخرين، الصفقات التي أتممتها، المراجعات التي أعطيتها للأخرين، إالخ) ولن يتم حذفها عند حذف حسابك. ولكن لن يتم عرض اسمك بجوار هذه المعلومات."
+      delete_personal_information: "إذا قمت بحذف حسابك، المعلومات الشخصية الخاصة بك (الاسم، رقم الهاتف والعنوان والبريد الإلكتروني، وصورة للملف الشخصي، وما إلى ذلك) سيتم حذفها بشكل دائم  و لا يمكن استردادها. سيتم إزالة كافة المعروضات التي قمت بإنشائها. فلن تكون قادر على إعادة تفعيل حسابك."
+      delete_information_others_involved: "المعلومات التي يتم تشاركها مع الأعضاء الآخرين مطلوبة (المحادثات مع الأعضاء الأخرين، الصفقات التي أتممتها، التقييمات التي أعطيتها للآخرين، إلخ) ولن يتم حذفها عند حذف حسابك. ولكن لن يتم عرض اسمك بجوار هذه المعلومات."
       unfinished_transactions: "لا يمكن حذف حسابك لأن لديك صفقة جارية. الرجاء حذف جميع الصفقات قبل حذف حسابك."
       new_password: "كلمة مرور جديدة"
       save: حفظ
@@ -1943,8 +1943,8 @@ ar:
       email_about_new_messages: "...شخص ما يرسل لي رسالة"
       email_about_new_received_testimonials: "...شخص ما قام بتقييمي"
       email_about_testimonial_reminders: "...انسى ان اقوم بتقييم شخص ما"
-      email_daily_community_updates: "ارسل لي نشرج بريدية <b>daily</b> اذا كان يوجد معروضات جديدة"
-      email_weekly_community_updates: "ارسل لي نشرج بريدية <b>weekly</b> اذا كان يوجد معروضات جديدة"
+      email_daily_community_updates: "ارسل لي نشرج بريدية <b>يومياً</b> اذا كان يوجد معروضات جديدة"
+      email_weekly_community_updates: "ارسل لي نشرج بريدية <b>اسبوعياً</b> اذا كان يوجد معروضات جديدة"
       do_not_email_community_updates: "لا اريد استلام نشرة بريدية"
       email_when_conversation_accepted: "...شخص ما قبل عرضي او طلبي"
       email_when_conversation_rejected: "...شخص ما رفض طلبي او عرضي"
@@ -1975,7 +1975,7 @@ ar:
       these_fields_are_shown_in_your: " هذه المعلومات تظهر لجميع مستخدمين %{service_name}"
       visible_to_everybody: "يظهر للجميع"
       visible_to_registered_users: "(يظهر للمستخدمين المسجلين في الموقع)"
-      default_in_listing: "(تستخدم فقط كإعداد افتراضي عند إنشاء قائمة جديدة)"
+      default_in_listing: "(يستخدم فقط كإعداد افتراضي عند إضافة قارب جديد)"
       invisible: "(لن يتم عرضة للمسخدمين الاخرين)"
       image_is_processing: "لقد تم اعداد صورة ملفك الشخصي . من فضلك، قم بإعادة تحميل الصفحة بعد ثواني"
     save_information: "حفظ التغييرات"
@@ -2039,13 +2039,13 @@ ar:
       friday: Fri
       saturday: Sat
     days_min:
-      sunday: Su
-      monday: Mo
-      tuesday: Tu
-      wednesday: We
-      thursday: Th
-      friday: Fr
-      saturday: Sa
+      sunday: الأحد
+      monday: الإثنين
+      tuesday: الثلاثاء
+      wednesday: الأربعاء
+      thursday: الخميس
+      friday: الجمعة
+      saturday: السبت
     months:
       january: يناير
       february: فراير
@@ -2073,7 +2073,7 @@ ar:
       november: Nov
       december: Dec
     today: اليوم
-    clear: واضح
+    clear: مسح
     format: mm/dd/yyyy
   time:
     formats:
@@ -2129,12 +2129,10 @@ ar:
       person:
         zero: مستخدمين
         one: مستخدم
-        few: مستخدمين
         other: مستخدمين
       listing_conversation:
         zero: صفقات
         one: صفقة
-        few: صفقات
         other: صفقات
     previous_label: "&#8592; السابق"
     next_label: "التالي &#8594;"
