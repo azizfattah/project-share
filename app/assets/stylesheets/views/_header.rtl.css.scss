@@ -126,8 +126,9 @@ $elementSpacing: lines(0.5);
   @include header-block;
 }
 
-.header-user-toggle {
-  padding-left: $elementSpacing;
+.rtl .header-user-toggle {
+  padding-right: $elementSpacing;
+  padding-left: 0;
   display: block;
   @include clearfix;
 }
@@ -153,6 +154,16 @@ $elementSpacing: lines(0.5);
 
 .rtl .toggle-menu .toggle-menu-title {
   text-align: right;
+}
+
+.rtl .header-right-with-user-menu #header-user-toggle-menu {
+  left: 0;
+  right: auto;
+}
+
+.rtl .header-with-user-menu .header-user-toggle {
+//  padding-left: 0;
+//  padding-right: 0.75em;
 }
 
 .header-inbox-link {
