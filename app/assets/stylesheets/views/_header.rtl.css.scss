@@ -146,9 +146,8 @@ $elementSpacing: lines(0.5);
   @include header-toggle-menu;
 }
 
-.header-toggle-menu-menu {
+.rtl .header-toggle-menu-menu {
   @include header-toggle-menu;
-  right: 0;
   left: auto;
 }
 

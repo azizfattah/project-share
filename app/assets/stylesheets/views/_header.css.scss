@@ -153,8 +153,16 @@ $elementSpacing: lines(0.5);
   }
 }
 
+@media(max-width: 768px) {
+  .header-right-with-user-menu .header-toggle-menu-user {
+    left: auto !important;
+    right: 0;
+  }
+}
+
 .header-toggle-menu-menu {
   @include header-toggle-menu;
+  right: auto;
 }
 
 .header-inbox-link {
