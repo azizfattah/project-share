@@ -901,12 +901,21 @@ module ApplicationHelper
   end
 
   def adjust_stylesheet_file_name(css_url)
-    if Utils.is_rtl_locale? 
+    puts " #{css_url}---------#{(css_url =~ /\.rtl\.css$/).inspect}, #{(css_url =~ /\.rtl\.css\.gz$/).inspect}"
+    if Utils.is_rtl_locale?
       if (css_url =~ /\.css$/i || css_url =~ /\.css\.gz$/i)
-        tmp = css_url.split(".css")
-        tmp[0] + ".rtl.css" + tmp[1].to_s
+        if (css_url =~ /\.rtl\.css$/) || (css_url =~ /\.rtl\.css\.gz$/)
+          css_url
+        else
+          tmp = css_url.split(".css")
+          tmp[0] + ".rtl.css" + tmp[1].to_s
+        end
       else
-        css_url + ".rtl"
+        if !(css_url =~ /\.rtl$/)
+          css_url + ".rtl"
+        else
+          css_url
+        end
       end
     else
       css_url
