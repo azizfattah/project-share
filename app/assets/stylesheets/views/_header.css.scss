@@ -145,6 +145,14 @@ $elementSpacing: lines(0.5);
   @include header-toggle-menu;
 }
 
+.header-right-with-user-menu {
+  position: relative;
+
+  .header-toggle-menu-user {
+    left: 0 !important;
+  }
+}
+
 .header-toggle-menu-menu {
   @include header-toggle-menu;
 }
