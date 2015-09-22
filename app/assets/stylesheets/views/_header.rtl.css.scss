@@ -157,8 +157,15 @@ $elementSpacing: lines(0.5);
 }
 
 .rtl .header-right-with-user-menu #header-user-toggle-menu {
-  left: 0;
-  right: auto;
+  left: auto !important;
+  right: 0;
+}
+
+@media(max-width: 768px) {
+  .rtl .header-right-with-user-menu #header-user-toggle-menu {
+    left: 0 !important;
+    right: auto;
+  }
 }
 
 .rtl .header-with-user-menu .header-user-toggle {
