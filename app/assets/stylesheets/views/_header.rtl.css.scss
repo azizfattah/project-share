@@ -126,8 +126,9 @@ $elementSpacing: lines(0.5);
   @include header-block;
 }
 
-.header-user-toggle {
-  padding-left: $elementSpacing;
+.rtl .header-user-toggle {
+  padding-right: $elementSpacing;
+  padding-left: 0;
   display: block;
   @include clearfix;
 }
@@ -145,14 +146,30 @@ $elementSpacing: lines(0.5);
   @include header-toggle-menu;
 }
 
-.header-toggle-menu-menu {
+.rtl .header-toggle-menu-menu {
   @include header-toggle-menu;
-  right: 0;
   left: auto;
 }
 
 .rtl .toggle-menu .toggle-menu-title {
   text-align: right;
+}
+
+.rtl .header-right-with-user-menu #header-user-toggle-menu {
+  left: auto !important;
+  right: 0;
+}
+
+@media(max-width: 768px) {
+  .rtl .header-right-with-user-menu #header-user-toggle-menu {
+    left: 0 !important;
+    right: auto;
+  }
+}
+
+.rtl .header-with-user-menu .header-user-toggle {
+//  padding-left: 0;
+//  padding-right: 0.75em;
 }
 
 .header-inbox-link {
