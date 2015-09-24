@@ -17,16 +17,21 @@ $(function() {
       var anchorOffset = anchorElement.offset();
       var top = anchorOffset.top + anchorElement.outerHeight();
       var left = anchorOffset.left;
-      if( $(document).attr("dir") == "rtl" ){
+
+      if( $("body").css("direction") == "rtl" ){
         if(left > 150){
-          left = left - ($menu.width() - anchorElement.outerWidth())
+          left = left - ($menu.outerWidth() - anchorElement.outerWidth())
         }else{
           left += 50
         }
       }
 
       if(anchorPosition === "right") {
-        var right = left - ($menu.outerWidth() - anchorElement.outerWidth());
+        if (right > $(window).width()) {
+          var right = left - ($menu.outerWidth() - anchorElement.outerWidth());
+        } else {
+          var right = left;
+        }
         $menu.css("left", right);
       } else {
         $menu.css("left", left);

@@ -35,7 +35,7 @@
           = t("header.login")
 
     .header-left.hidden-tablet
-      .header-menu-container.toggle.hidden{data: {toggle: '#header-menu-toggle-menu', 'toggle-position' => 'absolute'}}
+      .header-menu-container.toggle.hidden{data: {toggle: '#header-menu-toggle-menu', 'toggle-position' => 'absolute', "toggle-anchor-position" => Utils.is_rtl_locale? ? "right" : "left"}}
         #header-menu-mobile-anchor.header-menu-toggle-container.toggle-header-container
           = icon_tag("rows", ["header-menu-icon"])
           %span.visible-tablet-inline
