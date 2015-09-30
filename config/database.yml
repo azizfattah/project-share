@@ -4,8 +4,8 @@ development:
     adapter: mysql2
     database: sharetribe_development
     encoding: utf8
-    username: sharetribe
-    password: 551122
+    username: root
+    password:
     host: localhost
 
 # Warning: The database defined as "test" will be erased and
@@ -17,7 +17,7 @@ test: &test
     database: sharetribe_test
     encoding: utf8
     username: root
-    password: 551122
+    password:
     host: localhost
 
 staging:

@@ -23,6 +23,8 @@
       - m_price_break_down.each do |price_break_down|
         %li
           = render partial: "transactions/price_break_down", locals: price_break_down
+  %a{"data-paypal-button" => "true", :href => "/youraction"}
+  %img{:alt => "Check out with PayPal", :src => "//www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif"}/
 
   = form_tag(form_action, method: :post, id: "transaction-form") do
 

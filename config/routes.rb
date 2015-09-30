@@ -388,4 +388,12 @@ Kassi::Application.routes.draw do
   #keep this matcher last
   #catches all non matched routes, shows 404 and logs more reasonably than the alternative RoutingError + stacktrace
   match "*path" => "errors#not_found"
+
+
+
+  resource :paypal_payments do
+    collection do
+      get :checkout
+    end
+  end
 end

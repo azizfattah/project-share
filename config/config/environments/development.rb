@@ -59,15 +59,17 @@ Kassi::Application.configure do
     ActionMailer::Base.delivery_method = :sendmail
   elsif APP_CONFIG.mail_delivery_method == "smtp"
     # Enable sending mail from localhost
-    ActionMailer::Base.smtp_settings = {
-      :address              => APP_CONFIG.smtp_email_address,
-      :port                 => APP_CONFIG.smtp_email_port,
-      :domain               => APP_CONFIG.smtp_email_domain || 'localhost',
-      :user_name            => APP_CONFIG.smtp_email_user_name,
-      :password             => APP_CONFIG.smtp_email_password,
-      :authentication       => 'plain',
-      :enable_starttls_auto => true
-    }
+    # ActionMailer::Base.smtp_settings = {
+    #   :address              => APP_CONFIG.smtp_email_address,
+    #   :port                 => APP_CONFIG.smtp_email_port,
+    #   :domain               => APP_CONFIG.smtp_email_domain || 'localhost',
+    #   :user_name            => APP_CONFIG.smtp_email_user_name,
+    #   :password             => APP_CONFIG.smtp_email_password,
+    #   :authentication       => 'plain',
+    #   :enable_starttls_auto => true
+    # }
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = { address: 'localhost', port: 1025 }
   end
 
   config.active_support.deprecation = :stderr
