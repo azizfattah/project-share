@@ -72,7 +72,7 @@ class TransactionsController < ApplicationController
   end
 
   def express_checkout
-    binding.pry
+
     listing = Listing.find(session[:listing_id].to_f)
     response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
                                               ip: request.remote_ip,
