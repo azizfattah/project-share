@@ -27,8 +27,7 @@ gem 'jquery-rails', '2.1.4'
 gem 'unicorn', "~>4.6.3"
 gem "rack-timeout"
 
-gem "mysql2", "
-~> 0.3.10"
+gem "mysql2", "~> 0.3.10"
 gem 'haml'
 gem 'sass', "  ~> 3.2.9"
 gem 'rest-client', '>= 1.6.0'
@@ -69,7 +68,7 @@ gem "truncate_html"
 gem 'money-rails'
 gem 'mercury-rails'
 gem 'fb-channel-file'
-gem 'country_select'
+gem 'country_select', '> 1.2.0'
 gem 'braintree'
 gem "mail_view", "~> 1.0.3"
 gem 'statesman', '~> 0.5.0'
