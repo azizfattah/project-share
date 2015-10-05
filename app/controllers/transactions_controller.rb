@@ -49,7 +49,6 @@ class TransactionsController < ApplicationController
       total_amount_in_cent = number_of_days * @listing.price_cents
       session[:amount] = total_amount_in_cent
 
-
       case [process[:process], gateway, booking]
       when matches([:none])
         render_free(listing_model: listing_model, author_model: author_model, community: @current_community, params: transaction_params)
