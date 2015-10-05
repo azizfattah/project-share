@@ -7,11 +7,13 @@ test: &default
   # Mode can be 'live' or 'sandbox'
   mode: sandbox
 
-  # Credentials for Classic APIs
-  app_id: APP-80W284485P519543T
-  username: vikas-facilitator_api1.esignature.com.np
-  password: 1395372424
-  signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-AeUWvcYwAah4uQWmMBoHdxQ52OhD
+#  # Credentials for Classic APIs
+#  app_id: APP-80W284485P519543T
+#  username: vikas-facilitator_api1.esignature.com.np
+#  password: 1395372424
+#  signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-AeUWvcYwAah4uQWmMBoHdxQ52OhD
+
+
   # # With Certificate
   # cert_path: "config/cert_key.pem"
   # sandbox_email_address: Platform.sdk.seller@gmail.com

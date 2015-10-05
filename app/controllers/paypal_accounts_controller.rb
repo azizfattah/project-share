@@ -126,7 +126,6 @@ class PaypalAccountsController < ApplicationController
             cancel_url:   billing_agreement_cancel_person_paypal_account_url
           }
         ))
-
       billing_agreement_url = response.data[:redirect_url]
 
       if billing_agreement_url.blank?

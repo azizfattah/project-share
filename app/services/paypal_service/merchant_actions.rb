@@ -74,7 +74,7 @@ module PaypalService
                   PaymentAction: PAYMENT_ACTIONS[:authorization],
                 }],
               BillingAgreementDetails: [{
-                  BillingType: "ChannelInitiatedBilling",
+                  BillingType: "MerchantInitiatedBillingSingleAgreement",
                   BillingAgreementDescription: req[:description]
                 }]
             }
