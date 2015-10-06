@@ -27,7 +27,7 @@ gem 'jquery-rails', '2.1.4'
 gem 'unicorn', "~>4.6.3"
 gem "rack-timeout"
 
-gem "mysql2"
+gem "mysql2", "~> 0.3.10"
 gem 'haml'
 gem 'sass', "  ~> 3.2.9"
 gem 'rest-client', '>= 1.6.0'
@@ -139,3 +139,5 @@ group :development, :test do
 end
 
 gem 'strong_parameters'
+
+gem 'activemerchant'

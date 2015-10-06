@@ -7,7 +7,6 @@ module PaypalService
       [:username, :mandatory, :string],
       [:password, :mandatory, :string],
       [:signature, :mandatory, :string],
-      [:partner_id, :mandatory, :string],
       [:app_id, :mandatory, :string])
 
     IpnHook = EntityUtils.define_builder([:url, :mandatory, :string])

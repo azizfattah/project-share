@@ -18,6 +18,7 @@ class TransactionsController < ApplicationController
     [:end_on, transform_with: ->(v) { Maybe(v).map { |d| TransactionViewUtils.parse_booking_date(d) }.or_else(nil) } ]
   )
 
+
   def new
     Result.all(
       ->() {
@@ -30,6 +31,23 @@ class TransactionsController < ApplicationController
       booking = listing_model.unit_type == :day
 
       transaction_params = HashUtils.symbolize_keys({listing_id: listing_model.id}.merge(params.slice(:start_on, :end_on, :quantity, :delivery)))
+
+      start_date  = Date.parse(transaction_params[:start_on])
+      session[:start_date] = transaction_params[:start_on]
+
+      end_date  = Date.parse(transaction_params[:end_on])
+      session[:end_date] = transaction_params[:end_on]
+
+      number_of_days = end_date.mjd - start_date.mjd
+
+      session[:number_of_days] = number_of_days
+
+      @listing = Listing.find(params[:listing_id])
+
+      session[:listing_id] = params[:listing_id]
+
+      total_amount_in_cent = number_of_days * @listing.price_cents
+      session[:amount] = total_amount_in_cent
 
       case [process[:process], gateway, booking]
       when matches([:none])
@@ -50,6 +68,20 @@ class TransactionsController < ApplicationController
       flash[:error] = Maybe(data)[:error_tr_key].map { |tr_key| t(tr_key) }.or_else("Could not start a transaction, error message: #{error_msg}")
       redirect_to (session[:return_to_content] || root)
     }
+  end
+
+  def express_checkout
+
+    listing = Listing.find(session[:listing_id].to_f)
+    response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
+                                              ip: request.remote_ip,
+                                              return_url: "http://widemarina.com",
+                                              cancel_return_url: "http://widemarina.com",
+                                              currency: "USD",
+                                              allow_guest_checkout: true,
+                                              items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents}]
+    )
+    redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
   end
 
   def create

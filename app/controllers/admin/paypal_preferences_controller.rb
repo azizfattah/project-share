@@ -103,7 +103,6 @@ class Admin::PaypalPreferencesController < ApplicationController
         callback_url: permissions_verified_admin_community_paypal_preferences_url,
         country: community_country_code
       }))
-    binding.pry
     permissions_url = response.data[:redirect_url]
 
     if permissions_url.blank?
