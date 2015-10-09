@@ -64,3 +64,34 @@
 [Fri Oct  9 12:48:35.688 2015] [ 2837] rotating index 'listing_delta': started
 [Fri Oct  9 12:48:35.704 2015] [ 2837] rotating index 'listing_delta': success
 [Fri Oct  9 12:48:35.704 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 13:05:17.747 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 13:05:17.771 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 13:05:17.784 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 13:05:17.785 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 13:05:58.327 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 13:05:58.365 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 13:05:58.389 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 13:05:58.390 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 13:06:38.941 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 13:06:38.978 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 13:06:38.980 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 13:06:38.980 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 13:11:29.902 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 13:11:29.976 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 13:11:29.979 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 13:11:29.979 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 13:57:17.498 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 13:57:17.544 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 13:57:17.731 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 13:57:17.732 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 14:04:37.870 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 14:04:38.027 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 14:04:38.124 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 14:04:38.125 2015] [ 2837] rotating index 'listing_core': started
+[Fri Oct  9 14:04:38.192 2015] [ 2837] WARNING: binlog: failed to unlink /Users/rajendra/Desktop/project-share/tmp/binlog/development/binlog.001: No such file or directory (remove it manually)
+[Fri Oct  9 14:04:38.193 2015] [ 2837] rotating index 'listing_core': success
+[Fri Oct  9 14:04:38.193 2015] [ 2837] rotating index 'custom_field_value_delta': started
+[Fri Oct  9 14:04:38.238 2015] [ 2837] rotating index 'custom_field_value_delta': success
+[Fri Oct  9 14:04:38.238 2015] [ 2837] rotating index 'custom_field_value_core': started
+[Fri Oct  9 14:04:38.242 2015] [ 2837] rotating index 'custom_field_value_core': success
+[Fri Oct  9 14:04:38.243 2015] [ 2837] rotating index: all indexes done

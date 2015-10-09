@@ -141,3 +141,4 @@ end
 gem 'strong_parameters'
 
 gem 'activemerchant'
+gem "active_paypal_adaptive_payment"

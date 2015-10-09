@@ -36,6 +36,12 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
+    active_paypal_adaptive_payment (0.3.16)
+      activemerchant (>= 1.5.1)
+      hashie (>= 1.2.0)
+      mocha (>= 0.10.0)
+      money (>= 3.6.0)
+      multi_json (>= 1.0.0)
     activemerchant (1.53.0)
       activesupport (>= 3.2.14, < 5.0.0)
       builder (>= 2.1.2, < 4.0.0)
@@ -382,11 +388,14 @@ GEM
       callsite (~> 0.0, >= 0.0.11)
       rack-contrib (~> 1.1)
       railties (>= 3.0.0, < 5.0.0)
+    metaclass (0.0.4)
     method_source (0.8.2)
     middleware (0.1.0)
     mime-types (1.25.1)
     mimemagic (0.3.0)
     mini_portile (0.6.2)
+    mocha (1.1.0)
+      metaclass (~> 0.0.1)
     monetize (1.1.0)
       money (~> 6.5.0)
     money (6.5.1)
@@ -641,6 +650,7 @@ PLATFORMS
 
 DEPENDENCIES
   action_mailer_cache_delivery
+  active_paypal_adaptive_payment
   activemerchant
   airbrake (~> 4.1.0)
   annotate

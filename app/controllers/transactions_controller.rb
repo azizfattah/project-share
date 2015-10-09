@@ -71,17 +71,48 @@ class TransactionsController < ApplicationController
   end
 
   def express_checkout
+    ActiveMerchant::Billing::Base.mode = :test
+    paypal_options = {
+        login: "vikas-facilitator_api1.esignature.com.np",
+        password: "1395372424",
+        signature: "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AeUWvcYwAah4uQWmMBoHdxQ52OhD",
+        appid: "APP-80W284485P519543T"
+    }
+    gateway = ActiveMerchant::Billing::PaypalAdaptivePayment.new(paypal_options)
+
+
+
+    # For redirecting the customer to the actual paypal site to finish the payment.
 
     listing = Listing.find(session[:listing_id].to_f)
-    response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
-                                              ip: request.remote_ip,
-                                              return_url: "http://widemarina.com",
-                                              cancel_return_url: "http://widemarina.com",
-                                              currency: "USD",
-                                              allow_guest_checkout: true,
-                                              items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents}]
+    recipients = [{:email => 'vikas-facilitator2@esignature.com.np',
+                   :amount => 1000,
+                   :primary => true},
+                  {:email => 'vikas-facilitator3@esignature.com.np',
+                   :amount => 100,
+                   :primary => false}
+    ]
+
+    response = gateway.setup_purchase(
+        :return_url => "http://esignature.lvh.me:3000/en/transactions/status",
+        :cancel_url => "http://esignature.lvh.me:3000/en/transactions/status",
+        :ipn_notification_url => "http://esignature.lvh.me:3000/en/transactions/status",
+        :receiver_list => recipients,
+        items: [{name: listing.title, description: listing.description, quantity: 1, amount: 110}]
     )
-    redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
+
+    # response = ADAPTIVE_GATEWAY.setup_purchase(2000,
+    #                                          receiver_list: recipients,
+    #                                           ip: request.remote_ip,
+    #                                           return_url: "http://esignature.lvh.me:3000/en/transactions/status",
+    #                                           cancel_return_url: "http://esignature.lvh.me:3000/en/transactions/status"
+    #                                           # currency: "USD",
+    #                                           # allow_guest_checkout: true,
+                                             # items: [{name: listing.title, description: listing.description, quantity: 2, amount: 1000}]
+    # )
+    response_data_json = JSON.parse response.json
+    binding.pry
+    redirect_to ADAPTIVE_GATEWAY.redirect_url_for(response_data_json['payKey'])
   end
 
 
