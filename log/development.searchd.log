@@ -25,3 +25,42 @@
 [Fri Aug 21 18:30:23.225 2015] [ 8726] rotating index: all indexes done
 [Fri Aug 21 18:50:42.889 2015] [ 8726] caught SIGTERM, shutting down
 [Fri Aug 21 18:50:43.040 2015] [ 8726] shutdown complete
+[Fri Oct  9 09:11:35.581 2015] [ 2836] watchdog: main process 2837 forked ok
+[Fri Oct  9 09:11:35.627 2015] [ 2837] listening on all interfaces, port=3563
+[Fri Oct  9 09:11:35.638 2015] [ 2837] accepting connections
+[Fri Oct  9 10:44:38.839 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 10:44:38.863 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 10:44:38.975 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 10:44:39.000 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 11:16:17.072 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 11:16:17.122 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 11:16:17.126 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 11:16:17.126 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:23:28.917 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:23:28.994 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:23:29.012 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:23:29.013 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:35:40.743 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:35:40.799 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:35:40.812 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:35:40.813 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:37:26.541 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:37:26.563 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:37:26.567 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:37:26.567 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:40:52.432 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:40:52.492 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:40:52.529 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:40:52.530 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:42:03.074 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:42:03.125 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:42:03.128 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:42:03.128 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:43:54.171 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:43:54.235 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:43:54.273 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:43:54.274 2015] [ 2837] rotating index: all indexes done
+[Fri Oct  9 12:48:35.634 2015] [ 2837] caught SIGHUP (seamless=1, in queue=1)
+[Fri Oct  9 12:48:35.688 2015] [ 2837] rotating index 'listing_delta': started
+[Fri Oct  9 12:48:35.704 2015] [ 2837] rotating index 'listing_delta': success
+[Fri Oct  9 12:48:35.704 2015] [ 2837] rotating index: all indexes done

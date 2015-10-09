@@ -349,6 +349,7 @@ Kassi::Application.routes.draw do
         resources :transactions,  only: [:show, :new, :create] do
           collection do
             get :express_checkout
+            get :status
           end
         end
 

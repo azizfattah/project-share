@@ -84,6 +84,13 @@ class TransactionsController < ApplicationController
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
   end
 
+
+  def status
+
+
+  end
+
+
   def create
     Result.all(
       ->() {
