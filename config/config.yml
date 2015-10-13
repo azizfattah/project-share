@@ -2,3 +2,8 @@ development:
   mail_delivery_method: smtp
   smtp_email_address: "localhost"
   smtp_email_port: 1025
+
+production:
+  mail_delivery_method: smtp
+  smtp_email_address: "localhost"
+  smtp_email_port: 1025

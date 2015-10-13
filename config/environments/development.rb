@@ -98,7 +98,7 @@ Kassi::Application.configure do
         signature: "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AeUWvcYwAah4uQWmMBoHdxQ52OhD",
         appid: "APP-80W284485P519543T"
     }
-    ::ADAPTIVE_GATEWAY = ActiveMerchant::Billing::PaypalAdaptivePayment.new(paypal_options)
+    ::EXPRESS_GATEWAY = ActiveMerchant::Billing::PaypalExpressGateway.new(paypal_options)
 
 
   end
