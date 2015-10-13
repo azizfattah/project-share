@@ -96,7 +96,7 @@ class TransactionsController < ApplicationController
   end
 
   def notification
-    
+
   end
 
 
