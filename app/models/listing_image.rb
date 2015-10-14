@@ -26,14 +26,14 @@ class ListingImage < ActiveRecord::Base
   belongs_to :listing, touch: true
   belongs_to :author, :class_name => "Person"
 
+  paperclip_opts = {
+      :styles => { :thumb => '40x40#', :medium => '150x200>', :large => '300x300>' },
+      :convert_options => { :all => '-quality 92' },
+      :processor       => [ :cropper ]
+  }
+
   # see paperclip (for image_processing column)
-  has_attached_file :image, :styles => {
-        :small_3x2 => "240x160#",
-        :medium => "360x270#",
-        :thumb => "120x120#",
-        :original => "#{APP_CONFIG.original_image_width}x#{APP_CONFIG.original_image_height}>",
-        :big => Proc.new { |instance| instance.crop_big },
-        :email => "150x100#"}
+  has_attached_file :image, paperclip_opts
 
   before_save :set_dimensions!
 

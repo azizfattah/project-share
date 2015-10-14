@@ -32,27 +32,32 @@ class TransactionsController < ApplicationController
 
       transaction_params = HashUtils.symbolize_keys({listing_id: listing_model.id}.merge(params.slice(:start_on, :end_on, :quantity, :delivery)))
 
-      start_date = Date.parse(transaction_params[:start_on])
-      session[:start_date] = transaction_params[:start_on]
+      if transaction_params[:start_on].present? && transaction_params[:end_on].present?
+        start_date = Date.parse(transaction_params[:start_on])
+        session[:start_date] = transaction_params[:start_on]
 
-      end_date = Date.parse(transaction_params[:end_on])
-      session[:end_date] = transaction_params[:end_on]
+        end_date = Date.parse(transaction_params[:end_on])
+        session[:end_date] = transaction_params[:end_on]
 
-      number_of_days = end_date.mjd - start_date.mjd + 1
+        number_of_days = end_date.mjd - start_date.mjd + 1
 
-      session[:number_of_days] = number_of_days
+        session[:number_of_days] = number_of_days
 
-      @listing = Listing.find(params[:listing_id])
+        @listing = Listing.find(params[:listing_id])
 
-      session[:listing_id] = params[:listing_id]
+        total_amount_in_cent = number_of_days * @listing.price_cents
+        service_charge = total_amount_in_cent * 0.05 # 5% of total amount
 
-      total_amount_in_cent = number_of_days * @listing.price_cents
-      service_charge = total_amount_in_cent * 0.05 # 5% of total amount
+        total_amount_in_cent += service_charge
 
-      total_amount_in_cent += service_charge
+        session[:amount] = total_amount_in_cent
+        session[:service_charge] = service_charge
 
-      session[:amount] = total_amount_in_cent
-      session[:service_charge] = service_charge
+      end
+
+      if params[:listing_id].present?
+        session[:listing_id] = params[:listing_id]
+      end
 
       case [process[:process], gateway, booking]
         when matches([:none])
@@ -80,14 +85,14 @@ class TransactionsController < ApplicationController
     listing = Listing.find(session[:listing_id].to_f)
 
     response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
-                                      ip: request.remote_ip,
-                                      return_url: "http://esignature.lvh.me:3000/en/transactions/status",
-                                      cancel_return_url: "http://esignature.lvh.me:3000/",
-                                      notify_url:"http://esignature.lvh.me:3000/en/transactions/notification",
-                                      currency: "USD",
-                                      allow_guest_checkout: true,
-                                      items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
-                                              {name: "Service Charge", amount: session[:service_charge]}
+                                              ip: request.remote_ip,
+                                              return_url: "http://esignature.lvh.me:3000/en/transactions/status",
+                                              cancel_return_url: "http://esignature.lvh.me:3000/",
+                                              notify_url: "http://70921e04.ngrok.io/en/transactions/notification",
+                                              currency: "USD",
+                                              allow_guest_checkout: true,
+                                              items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
+                                                      {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
 
@@ -96,7 +101,68 @@ class TransactionsController < ApplicationController
   end
 
   def notification
+    binding.pry
+  end
 
+  def adaptive_checkout
+
+    system_admin_email = PaypalAccount.where(active: true).where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL").first.email
+
+    listing = Listing.find(session[:listing_id].to_f)
+
+
+    binding.pry
+
+    seller_email  =  PaypalAccount.where(person_id: listing.author.id, active: true).first.email
+
+    binding.pry
+
+    recipients = [{:email => seller_email,
+                   :amount => 110,
+                   :primary => true},
+
+                  {:email => system_admin_email,
+                   :amount => 10,
+                   :primary => false}
+    ]
+
+    response = ADAPTIVE_GATEWAY.setup_purchase(
+        action_type: "CREATE",
+        return_url: "http://esignature.lvh.me:3000/en/transactions/status",
+        cancel_url: "http://esignature.lvh.me:3000/",
+        ipn_notification_url: "http://70921e04.ngrok.io/en/transactions/notification",
+        receiver_list: recipients
+    )
+
+    ADAPTIVE_GATEWAY.set_payment_options(
+        :display_options => {
+            :business_name    => "My  Business "
+        },
+        :pay_key => response["payKey"],
+        :receiver_options => [
+            {
+                :description => "Your purchase of XYZ",
+                :invoice_data => {
+                    :item => [
+                        { :name => "Item #1", :item_count => 1, :item_price => 100, :price => 100 },
+                        { :name => "Item #2", :item_count => 1, :item_price => 10, :price => 10 }
+                    ]
+                },
+                :receiver => { :email => 'vikas-facilitator2@esignature.com.np' }
+            },
+            {
+                :description => "Service Charge Of XYZ ",
+                :invoice_data => {
+                    :item => [{ :name => "Fee", :item_count => 1, :item_price => 10, :price => 10 }]
+                },
+                :receiver => { :email => 'vikas-facilitator3@esignature.com.np' }
+            }
+        ]
+    )
+
+
+    # For redirecting the customer to the actual paypal site to finish the payment.
+    redirect_to (ADAPTIVE_GATEWAY.redirect_url_for(response["payKey"]))
   end
 
 
@@ -109,9 +175,10 @@ class TransactionsController < ApplicationController
         :payer_id => params[:PayerID]
     }
 
-   response =  EXPRESS_GATEWAY.purchase(1234, express_purchase_options)
+    response = EXPRESS_GATEWAY.purchase(1234, express_purchase_options)
 
   end
+
   def express_token=(token)
     self[:express_token] = token
     if new_record? && !token.blank?
