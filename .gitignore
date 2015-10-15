@@ -45,3 +45,5 @@ coverage/
 .idea/
 *.sock
 .vagrant
+log/.
+db/sphinx/.

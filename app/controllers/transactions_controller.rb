@@ -11,34 +11,34 @@ class TransactionsController < ApplicationController
   MessageForm = Form::Message
 
   TransactionForm = EntityUtils.define_builder(
-    [:listing_id, :fixnum, :to_integer, :mandatory],
-    [:message, :string],
-    [:quantity, :fixnum, :to_integer, default: 1],
-    [:start_on, transform_with: ->(v) { Maybe(v).map { |d| TransactionViewUtils.parse_booking_date(d) }.or_else(nil) } ],
-    [:end_on, transform_with: ->(v) { Maybe(v).map { |d| TransactionViewUtils.parse_booking_date(d) }.or_else(nil) } ]
+      [:listing_id, :fixnum, :to_integer, :mandatory],
+      [:message, :string],
+      [:quantity, :fixnum, :to_integer, default: 1],
+      [:start_on, transform_with: ->(v) { Maybe(v).map { |d| TransactionViewUtils.parse_booking_date(d) }.or_else(nil) }],
+      [:end_on, transform_with: ->(v) { Maybe(v).map { |d| TransactionViewUtils.parse_booking_date(d) }.or_else(nil) }]
   )
 
 
   def new
     Result.all(
-      ->() {
-        fetch_data(params[:listing_id])
-      },
-      ->((listing_id, listing_model)) {
-        ensure_can_start_transactions(listing_model: listing_model, current_user: @current_user, current_community: @current_community)
-      }
+    ->() {
+      fetch_data(params[:listing_id])
+    },
+    ->((listing_id, listing_model)) {
+      ensure_can_start_transactions(listing_model: listing_model, current_user: @current_user, current_community: @current_community)
+    }
     ).on_success { |((listing_id, listing_model, author_model, process, gateway))|
       booking = listing_model.unit_type == :day
 
       transaction_params = HashUtils.symbolize_keys({listing_id: listing_model.id}.merge(params.slice(:start_on, :end_on, :quantity, :delivery)))
 
-      start_date  = Date.parse(transaction_params[:start_on])
+      start_date = Date.parse(transaction_params[:start_on])
       session[:start_date] = transaction_params[:start_on]
 
-      end_date  = Date.parse(transaction_params[:end_on])
+      end_date = Date.parse(transaction_params[:end_on])
       session[:end_date] = transaction_params[:end_on]
 
-      number_of_days = end_date.mjd - start_date.mjd
+      number_of_days = end_date.mjd - start_date.mjd + 1
 
       session[:number_of_days] = number_of_days
 
@@ -47,22 +47,27 @@ class TransactionsController < ApplicationController
       session[:listing_id] = params[:listing_id]
 
       total_amount_in_cent = number_of_days * @listing.price_cents
+      service_charge = total_amount_in_cent * 0.05 # 5% of total amount
+
+      total_amount_in_cent += service_charge
+
       session[:amount] = total_amount_in_cent
+      session[:service_charge] = service_charge
 
       case [process[:process], gateway, booking]
-      when matches([:none])
-        render_free(listing_model: listing_model, author_model: author_model, community: @current_community, params: transaction_params)
-      when matches([:preauthorize, __, true])
-        redirect_to book_path(transaction_params)
-      when matches([:preauthorize, :paypal])
-        redirect_to initiate_order_path(transaction_params)
-      when matches([:preauthorize, :braintree])
-        redirect_to preauthorize_payment_path(transaction_params)
-      when matches([:postpay])
-        redirect_to post_pay_listing_path(transaction_params)
-      else
-        opts = "listing_id: #{listing_id}, payment_gateway: #{gateway}, payment_process: #{process}, booking: #{booking}"
-        raise ArgumentError.new("Can not find new transaction path to #{opts}")
+        when matches([:none])
+          render_free(listing_model: listing_model, author_model: author_model, community: @current_community, params: transaction_params)
+        when matches([:preauthorize, __, true])
+          redirect_to book_path(transaction_params)
+        when matches([:preauthorize, :paypal])
+          redirect_to initiate_order_path(transaction_params)
+        when matches([:preauthorize, :braintree])
+          redirect_to preauthorize_payment_path(transaction_params)
+        when matches([:postpay])
+          redirect_to post_pay_listing_path(transaction_params)
+        else
+          opts = "listing_id: #{listing_id}, payment_gateway: #{gateway}, payment_process: #{process}, booking: #{booking}"
+          raise ArgumentError.new("Can not find new transaction path to #{opts}")
       end
     }.on_error { |error_msg, data|
       flash[:error] = Maybe(data)[:error_tr_key].map { |tr_key| t(tr_key) }.or_else("Could not start a transaction, error message: #{error_msg}")
@@ -73,54 +78,96 @@ class TransactionsController < ApplicationController
   def express_checkout
 
     listing = Listing.find(session[:listing_id].to_f)
+
     response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
-                                              ip: request.remote_ip,
-                                              return_url: "http://widemarina.com",
-                                              cancel_return_url: "http://widemarina.com",
-                                              currency: "USD",
-                                              allow_guest_checkout: true,
-                                              items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents}]
+                                      ip: request.remote_ip,
+                                      return_url: "http://esignature.lvh.me:3000/en/transactions/status",
+                                      cancel_return_url: "http://esignature.lvh.me:3000/",
+                                      notify_url:"http://esignature.lvh.me:3000/en/transactions/notification",
+                                      currency: "USD",
+                                      allow_guest_checkout: true,
+                                      items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
+                                              {name: "Service Charge", amount: session[:service_charge]}
+                                              ]
     )
+
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
+
+  end
+
+  def notification
+
+  end
+
+
+  def status
+    token = params[:token]
+    @response = EXPRESS_GATEWAY.details_for(token).params
+    express_purchase_options = {
+        :ip => request.remote_ip,
+        :token => params[:token],
+        :payer_id => params[:PayerID]
+    }
+
+   response =  EXPRESS_GATEWAY.purchase(1234, express_purchase_options)
+
+  end
+  def express_token=(token)
+    self[:express_token] = token
+    if new_record? && !token.blank?
+      # you can dump details var if you need more info from buyer
+      details = EXPRESS_GATEWAY.details_for(token)
+      self.express_payer_id = details.payer_id
+    end
+  end
+
+
+  def express_purchase_options params
+    {
+        :ip => ip,
+        :token => params[:token],
+        :payer_id => express_payer_id
+    }
   end
 
   def create
+
     Result.all(
-      ->() {
-        TransactionForm.validate(params)
-      },
-      ->(form) {
-        fetch_data(form[:listing_id])
-      },
-      ->(form, (_, _, _, process)) {
-        validate_form(form, process)
-      },
-      ->(_, (listing_id, listing_model), _) {
-        ensure_can_start_transactions(listing_model: listing_model, current_user: @current_user, current_community: @current_community)
-      },
-      ->(form, (listing_id, listing_model, author_model, process, gateway), _, _) {
-        booking_fields = Maybe(form).slice(:start_on, :end_on).select { |booking| booking.values.all? }.or_else({})
+    ->() {
+      TransactionForm.validate(params)
+    },
+    ->(form) {
+      fetch_data(form[:listing_id])
+    },
+    ->(form, (_, _, _, process)) {
+      validate_form(form, process)
+    },
+    ->(_, (listing_id, listing_model), _) {
+      ensure_can_start_transactions(listing_model: listing_model, current_user: @current_user, current_community: @current_community)
+    },
+    ->(form, (listing_id, listing_model, author_model, process, gateway), _, _) {
+      booking_fields = Maybe(form).slice(:start_on, :end_on).select { |booking| booking.values.all? }.or_else({})
 
-        quantity = Maybe(booking_fields).map { |b| DateUtils.duration_days(b[:start_on], b[:end_on]) }.or_else(form[:quantity])
+      quantity = Maybe(booking_fields).map { |b| DateUtils.duration_days(b[:start_on], b[:end_on]) }.or_else(form[:quantity])
 
-        TransactionService::Transaction.create(
+      TransactionService::Transaction.create(
           {
-            transaction: {
-              community_id: @current_community.id,
-              listing_id: listing_id,
-              listing_title: listing_model.title,
-              starter_id: @current_user.id,
-              listing_author_id: author_model.id,
-              unit_type: listing_model.unit_type,
-              unit_price: listing_model.price,
-              unit_tr_key: listing_model.unit_tr_key,
-              listing_quantity: quantity,
-              content: form[:message],
-              booking_fields: booking_fields,
-              payment_gateway: process[:process] == :none ? :none : gateway, # TODO This is a bit awkward
-              payment_process: process[:process]}
+              transaction: {
+                  community_id: @current_community.id,
+                  listing_id: listing_id,
+                  listing_title: listing_model.title,
+                  starter_id: @current_user.id,
+                  listing_author_id: author_model.id,
+                  unit_type: listing_model.unit_type,
+                  unit_price: listing_model.price,
+                  unit_tr_key: listing_model.unit_tr_key,
+                  listing_quantity: quantity,
+                  content: form[:message],
+                  booking_fields: booking_fields,
+                  payment_gateway: process[:process] == :none ? :none : gateway, # TODO This is a bit awkward
+                  payment_process: process[:process]}
           })
-      }
+    }
     ).on_success { |(_, (_, _, _, process), _, _, tx)|
       after_create_actions!(process: process, transaction: tx[:transaction], community_id: @current_community.id)
       flash[:notice] = after_create_flash(process: process) # add more params here when needed
@@ -133,28 +180,28 @@ class TransactionsController < ApplicationController
 
   def show
     m_participant =
-      Maybe(
-        MarketplaceService::Transaction::Query.transaction_with_conversation(
-        transaction_id: params[:id],
-        person_id: @current_user.id,
-        community_id: @current_community.id))
-      .map { |tx_with_conv| [tx_with_conv, :participant] }
+        Maybe(
+            MarketplaceService::Transaction::Query.transaction_with_conversation(
+                transaction_id: params[:id],
+                person_id: @current_user.id,
+                community_id: @current_community.id))
+            .map { |tx_with_conv| [tx_with_conv, :participant] }
 
     m_admin =
-      Maybe(@current_user.has_admin_rights_in?(@current_community))
-      .select { |can_show| can_show }
-      .map {
-        MarketplaceService::Transaction::Query.transaction_with_conversation(
-          transaction_id: params[:id],
-          community_id: @current_community.id)
-      }
-      .map { |tx_with_conv| [tx_with_conv, :admin] }
+        Maybe(@current_user.has_admin_rights_in?(@current_community))
+            .select { |can_show| can_show }
+            .map {
+          MarketplaceService::Transaction::Query.transaction_with_conversation(
+              transaction_id: params[:id],
+              community_id: @current_community.id)
+        }
+            .map { |tx_with_conv| [tx_with_conv, :admin] }
 
     transaction_conversation, role = m_participant.or_else { m_admin.or_else([]) }
 
     tx = TransactionService::Transaction.get(community_id: @current_community.id, transaction_id: params[:id])
-         .maybe()
-         .or_else(nil)
+             .maybe()
+             .or_else(nil)
 
     unless tx.present? && transaction_conversation.present?
       flash[:error] = t("layouts.notifications.you_are_not_authorized_to_view_this_content")
@@ -166,40 +213,40 @@ class TransactionsController < ApplicationController
     listing = Listing.where(id: tx[:listing_id]).first
 
     messages_and_actions = TransactionViewUtils::merge_messages_and_transitions(
-      TransactionViewUtils.conversation_messages(conversation[:messages], @current_community.name_display_type),
-      TransactionViewUtils.transition_messages(transaction_conversation, conversation, @current_community.name_display_type))
+        TransactionViewUtils.conversation_messages(conversation[:messages], @current_community.name_display_type),
+        TransactionViewUtils.transition_messages(transaction_conversation, conversation, @current_community.name_display_type))
 
     MarketplaceService::Transaction::Command.mark_as_seen_by_current(params[:id], @current_user.id)
 
     is_author =
-      if role == :admin
-        true
-      else
-        listing.author_id == @current_user.id
-      end
+        if role == :admin
+          true
+        else
+          listing.author_id == @current_user.id
+        end
 
     render "transactions/show", locals: {
-      messages: messages_and_actions.reverse,
-      transaction: tx,
-      listing: listing,
-      transaction_model: tx_model,
-      conversation_other_party: person_entity_with_url(conversation[:other_person]),
-      is_author: is_author,
-      role: role,
-      message_form: MessageForm.new({sender_id: @current_user.id, conversation_id: conversation[:id]}),
-      message_form_action: person_message_messages_path(@current_user, :message_id => conversation[:id]),
-      price_break_down_locals: price_break_down_locals(tx)
-    }
+                                  messages: messages_and_actions.reverse,
+                                  transaction: tx,
+                                  listing: listing,
+                                  transaction_model: tx_model,
+                                  conversation_other_party: person_entity_with_url(conversation[:other_person]),
+                                  is_author: is_author,
+                                  role: role,
+                                  message_form: MessageForm.new({sender_id: @current_user.id, conversation_id: conversation[:id]}),
+                                  message_form_action: person_message_messages_path(@current_user, :message_id => conversation[:id]),
+                                  price_break_down_locals: price_break_down_locals(tx)
+                              }
   end
 
   def op_status
     process_token = params[:process_token]
 
     resp = Maybe(process_token)
-      .map { |ptok| paypal_process.get_status(ptok) }
-      .select(&:success)
-      .data
-      .or_else(nil)
+               .map { |ptok| paypal_process.get_status(ptok) }
+               .select(&:success)
+               .data
+               .or_else(nil)
 
     if resp
       render :json => resp
@@ -210,8 +257,8 @@ class TransactionsController < ApplicationController
 
   def person_entity_with_url(person_entity)
     person_entity.merge({
-      url: person_path(id: person_entity[:username]),
-      display_name: PersonViewUtils.person_entity_display_name(person_entity, @current_community.name_display_type)})
+                            url: person_path(id: person_entity[:username]),
+                            display_name: PersonViewUtils.person_entity_display_name(person_entity, @current_community.name_display_type)})
   end
 
   def paypal_process
@@ -222,15 +269,15 @@ class TransactionsController < ApplicationController
 
   def ensure_can_start_transactions(listing_model:, current_user:, current_community:)
     error =
-      if listing_model.closed?
-        "layouts.notifications.you_cannot_reply_to_a_closed_offer"
-      elsif listing_model.author == current_user
-       "layouts.notifications.you_cannot_send_message_to_yourself"
-      elsif !listing_model.visible_to?(current_user, current_community)
-        "layouts.notifications.you_are_not_authorized_to_view_this_content"
-      else
-        nil
-      end
+        if listing_model.closed?
+          "layouts.notifications.you_cannot_reply_to_a_closed_offer"
+        elsif listing_model.author == current_user
+          "layouts.notifications.you_cannot_send_message_to_yourself"
+        elsif !listing_model.visible_to?(current_user, current_community)
+          "layouts.notifications.you_are_not_authorized_to_view_this_content"
+        else
+          nil
+        end
 
     if error
       Result::Error.new(error, {error_tr_key: error})
@@ -241,66 +288,67 @@ class TransactionsController < ApplicationController
 
   def after_create_flash(process:)
     case process[:process]
-    when :none
-      t("layouts.notifications.message_sent")
-    else
-      raise NotImplementedError.new("Not implemented for process #{process}")
+      when :none
+        t("layouts.notifications.message_sent")
+      else
+        raise NotImplementedError.new("Not implemented for process #{process}")
     end
   end
 
   def after_create_redirect(process:, starter_id:, transaction:)
     case process[:process]
-    when :none
-      person_transaction_path(person_id: starter_id, id: transaction[:id])
-    else
-      raise NotImplementedError.new("Not implemented for process #{process}")
+      when :none
+        person_transaction_path(person_id: starter_id, id: transaction[:id])
+      else
+        raise NotImplementedError.new("Not implemented for process #{process}")
     end
   end
 
   def after_create_actions!(process:, transaction:, community_id:)
     case process[:process]
-    when :none
-      # TODO Do I really have to do the state transition here?
-      # Shouldn't it be handled by the TransactionService
-      MarketplaceService::Transaction::Command.transition_to(transaction[:id], "free")
+      when :none
+        # TODO Do I really have to do the state transition here?
+        # Shouldn't it be handled by the TransactionService
+        MarketplaceService::Transaction::Command.transition_to(transaction[:id], "free")
 
-      # TODO: remove references to transaction model
-      transaction = Transaction.find(transaction[:id])
+        # TODO: remove references to transaction model
+        transaction = Transaction.find(transaction[:id])
 
-      Delayed::Job.enqueue(MessageSentJob.new(transaction.conversation.messages.last.id, community_id))
-    else
-      raise NotImplementedError.new("Not implemented for process #{process}")
+        Delayed::Job.enqueue(MessageSentJob.new(transaction.conversation.messages.last.id, community_id))
+      else
+        raise NotImplementedError.new("Not implemented for process #{process}")
     end
   end
+
   # Fetch all related data based on the listing_id
   #
   # Returns: Result::Success([listing_id, listing_model, author, process, gateway])
   #
   def fetch_data(listing_id)
     Result.all(
-      ->() {
-        if listing_id.nil?
-          Result::Error.new("No listing ID provided")
-        else
-          Result::Success.new(listing_id)
-        end
-      },
-      ->(listing_id) {
-        # TODO Do not use Models directly. The data should come from the APIs
-        Maybe(@current_community.listings.where(id: listing_id).first)
-          .map     { |listing_model| Result::Success.new(listing_model) }
+    ->() {
+      if listing_id.nil?
+        Result::Error.new("No listing ID provided")
+      else
+        Result::Success.new(listing_id)
+      end
+    },
+    ->(listing_id) {
+      # TODO Do not use Models directly. The data should come from the APIs
+      Maybe(@current_community.listings.where(id: listing_id).first)
+          .map { |listing_model| Result::Success.new(listing_model) }
           .or_else { Result::Error.new("Can not find listing with id #{listing_id}") }
-      },
-      ->(_, listing_model) {
-        # TODO Do not use Models directly. The data should come from the APIs
-        Result::Success.new(listing_model.author)
-      },
-      ->(_, listing_model, *rest) {
-        TransactionService::API::Api.processes.get(community_id: @current_community.id, process_id: listing_model.transaction_process_id)
-      },
-      ->(*) {
-        Result::Success.new(MarketplaceService::Community::Query.payment_type(@current_community.id))
-      },
+    },
+    ->(_, listing_model) {
+      # TODO Do not use Models directly. The data should come from the APIs
+      Result::Success.new(listing_model.author)
+    },
+    ->(_, listing_model, *rest) {
+      TransactionService::API::Api.processes.get(community_id: @current_community.id, process_id: listing_model.transaction_process_id)
+    },
+    ->(*) {
+      Result::Success.new(MarketplaceService::Community::Query.payment_type(@current_community.id))
+    },
     )
   end
 
@@ -324,32 +372,32 @@ class TransactionsController < ApplicationController
       total_label = (tx[:payment_process] != :preauthorize) ? t("transactions.price") : t("transactions.total")
 
       TransactionViewUtils.price_break_down_locals({
-        listing_price: tx[:listing_price],
-        localized_unit_type: unit_type,
-        localized_selector_label: localized_selector_label,
-        booking: booking,
-        start_on: booking ? tx[:booking][:start_on] : nil,
-        end_on: booking ? tx[:booking][:end_on] : nil,
-        duration: booking ? tx[:booking][:duration] : nil,
-        quantity: quantity,
-        subtotal: show_subtotal ? tx[:listing_price] * quantity : nil,
-        total: Maybe(tx[:payment_total]).or_else(tx[:checkout_total]),
-        shipping_price: tx[:shipping_price],
-        total_label: total_label
-      })
+                                                       listing_price: tx[:listing_price],
+                                                       localized_unit_type: unit_type,
+                                                       localized_selector_label: localized_selector_label,
+                                                       booking: booking,
+                                                       start_on: booking ? tx[:booking][:start_on] : nil,
+                                                       end_on: booking ? tx[:booking][:end_on] : nil,
+                                                       duration: booking ? tx[:booking][:duration] : nil,
+                                                       quantity: quantity,
+                                                       subtotal: show_subtotal ? tx[:listing_price] * quantity : nil,
+                                                       total: Maybe(tx[:payment_total]).or_else(tx[:checkout_total]),
+                                                       shipping_price: tx[:shipping_price],
+                                                       total_label: total_label
+                                                   })
     end
   end
 
   def render_free(listing_model:, author_model:, community:, params:)
     # TODO This data should come from API
     listing = {
-      id: listing_model.id,
-      title: listing_model.title,
-      action_button_label: t(listing_model.action_button_tr_key),
+        id: listing_model.id,
+        title: listing_model.title,
+        action_button_label: t(listing_model.action_button_tr_key),
     }
     author = {
-      display_name: PersonViewUtils.person_display_name(author_model, community),
-      username: author_model.username
+        display_name: PersonViewUtils.person_display_name(author_model, community),
+        username: author_model.username
     }
 
     unit_type = listing_model.unit_type.present? ? ListingViewUtils.translate_unit(listing_model.unit_type, listing_model.unit_tr_key) : nil
@@ -363,31 +411,31 @@ class TransactionsController < ApplicationController
 
     m_price_break_down = Maybe(listing_model).select { |listing_model| listing_model.price.present? }.map { |listing_model|
       TransactionViewUtils.price_break_down_locals(
-        {
-          listing_price: listing_model.price,
-          localized_unit_type: unit_type,
-          localized_selector_label: localized_selector_label,
-          booking: booking,
-          start_on: booking_start,
-          end_on: booking_end,
-          duration: duration,
-          quantity: quantity,
-          subtotal: quantity != 1 ? listing_model.price * quantity : nil,
-          total: listing_model.price * quantity,
-          shipping_price: nil,
-          total_label: total_label
-        })
+          {
+              listing_price: listing_model.price,
+              localized_unit_type: unit_type,
+              localized_selector_label: localized_selector_label,
+              booking: booking,
+              start_on: booking_start,
+              end_on: booking_end,
+              duration: duration,
+              quantity: quantity,
+              subtotal: quantity != 1 ? listing_model.price * quantity : nil,
+              total: listing_model.price * quantity,
+              shipping_price: nil,
+              total_label: total_label
+          })
     }
 
     render "transactions/new", locals: {
-             listing: listing,
-             author: author,
-             action_button_label: t(listing_model.action_button_tr_key),
-             m_price_break_down: m_price_break_down,
-             booking_start: booking_start,
-             booking_end: booking_end,
-             quantity: quantity,
-             form_action: person_transactions_path(person_id: @current_user, listing_id: listing_model.id)
-           }
+                                 listing: listing,
+                                 author: author,
+                                 action_button_label: t(listing_model.action_button_tr_key),
+                                 m_price_break_down: m_price_break_down,
+                                 booking_start: booking_start,
+                                 booking_end: booking_end,
+                                 quantity: quantity,
+                                 form_action: person_transactions_path(person_id: @current_user, listing_id: listing_model.id)
+                             }
   end
 end
