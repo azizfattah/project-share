@@ -3,7 +3,7 @@ class TransactionsController < ApplicationController
   before_filter only: [:show] do |controller|
     controller.ensure_logged_in t("layouts.notifications.you_must_log_in_to_view_your_inbox")
   end
-
+  protect_from_forgery except: :status
   before_filter do |controller|
     controller.ensure_logged_in t("layouts.notifications.you_must_log_in_to_do_a_transaction")
   end
@@ -101,70 +101,101 @@ class TransactionsController < ApplicationController
   end
 
   def notification
-    binding.pry
+
+    puts '=' * 200
+    puts params
+    puts '=' * 200
+
   end
 
   def adaptive_checkout
 
-    system_admin_email = PaypalAccount.where(active: true).where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL").first.email
-
     listing = Listing.find(session[:listing_id].to_f)
 
 
-    binding.pry
+    total_amount_in_cents = listing.price_cents
 
-    seller_email  =  PaypalAccount.where(person_id: listing.author.id, active: true).first.email
+    service_charge_rate = 5 #in percentage 5%
 
-    binding.pry
+    service_charge_in_cents = total_amount_in_cents * service_charge_rate / 100
 
-    recipients = [{:email => seller_email,
-                   :amount => 110,
-                   :primary => true},
+    net_total_amount_in_cents = total_amount_in_cents + service_charge_in_cents # Service charge is additional to total listing price
 
-                  {:email => system_admin_email,
-                   :amount => 10,
-                   :primary => false}
+    service_charge_in_dollor = service_charge_in_cents / 100.00 # this will be for secondary user (Admin of the system)
+
+    net_total_amount_in_dollar = net_total_amount_in_cents / 100.00 # this will be for primary receiver
+
+
+    seller_email = PaypalAccount.where(person_id: listing.author_id).last.email # This is the Primary receiver
+
+    system_admin_email = PaypalAccount.where(active: true)
+                             .where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL")
+                             .first.email # This is the Secondary receiver
+
+
+    recipients = [
+        {
+            email: seller_email,
+            amount: net_total_amount_in_dollar ,
+            primary: true
+        },
+
+        {
+            email: system_admin_email,
+            amount: service_charge_in_dollor,
+            primary: false
+        }
     ]
 
     response = ADAPTIVE_GATEWAY.setup_purchase(
         action_type: "CREATE",
         return_url: "http://esignature.lvh.me:3000/en/transactions/status",
         cancel_url: "http://esignature.lvh.me:3000/",
-        ipn_notification_url: "http://70921e04.ngrok.io/en/transactions/notification",
+        ipn_notification_url: "http://0dbf7871.ngrok.io/en/transactions/notification",
         receiver_list: recipients
     )
 
+
     ADAPTIVE_GATEWAY.set_payment_options(
-        :display_options => {
-            :business_name    => "My  Business "
-        },
-        :pay_key => response["payKey"],
-        :receiver_options => [
+
+        pay_key: response["payKey"],
+        receiver_options: [
             {
-                :description => "Your purchase of XYZ",
-                :invoice_data => {
-                    :item => [
-                        { :name => "Item #1", :item_count => 1, :item_price => 100, :price => 100 },
-                        { :name => "Item #2", :item_count => 1, :item_price => 10, :price => 10 }
+                description: "Your purchase of #{listing.title}",
+                invoice_data: {
+                    item: [
+                        {
+                            name: listing.title,
+                            item_count: 1,
+                            item_price: net_total_amount_in_dollar,
+                            price: net_total_amount_in_dollar
+                        }
                     ]
                 },
-                :receiver => { :email => 'vikas-facilitator2@esignature.com.np' }
+                receiver: {email: seller_email}
             },
             {
-                :description => "Service Charge Of XYZ ",
-                :invoice_data => {
-                    :item => [{ :name => "Fee", :item_count => 1, :item_price => 10, :price => 10 }]
+                description: "Service charge for purchase of #{listing.title} ",
+                invoice_data: {
+                    item: [
+                        {
+                            name: "Service charge for purchase of #{listing.title}",
+                            item_count: 1,
+                            item_price: service_charge_in_dollor,
+                            price: service_charge_in_dollor
+                        }
+                    ]
                 },
-                :receiver => { :email => 'vikas-facilitator3@esignature.com.np' }
+                receiver: {email: system_admin_email}
             }
         ]
     )
 
 
+
     # For redirecting the customer to the actual paypal site to finish the payment.
     redirect_to (ADAPTIVE_GATEWAY.redirect_url_for(response["payKey"]))
   end
-
 
   def status
     token = params[:token]
