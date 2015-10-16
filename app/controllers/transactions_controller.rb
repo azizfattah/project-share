@@ -117,7 +117,8 @@ class TransactionsController < ApplicationController
       }
 
       response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
-      reset_session
+
+      reset_session_params
 
       if response.message == "Success"
         render 'status'
@@ -127,6 +128,17 @@ class TransactionsController < ApplicationController
     else
       redirect_to  homepage_without_locale_path
     end
+
+  end
+
+  def reset_session_params
+    session[:number_of_days] = nil
+    session[:listing_id] = nil
+    session[:amount] = nil
+    session[:service_charge] = nil
+    session[:number_of_days] = nil
+    session[:start_date] = nil
+    session[:end_date] = nil
 
   end
 
