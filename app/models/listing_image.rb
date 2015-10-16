@@ -26,14 +26,14 @@ class ListingImage < ActiveRecord::Base
   belongs_to :listing, touch: true
   belongs_to :author, :class_name => "Person"
 
-  paperclip_opts = {
-      :styles => { :thumb => '40x40#', :medium => '150x200>', :large => '300x300>' },
-      :convert_options => { :all => '-quality 92' },
-      :processor       => [ :cropper ]
-  }
-
   # see paperclip (for image_processing column)
-  has_attached_file :image, paperclip_opts
+  has_attached_file :image, :styles => {
+                              :small_3x2 => "240x160#",
+                              :medium => "360x270#",
+                              :thumb => "120x120#",
+                              :original => "#{APP_CONFIG.original_image_width}x#{APP_CONFIG.original_image_height}>",
+                              :big => Proc.new { |instance| instance.crop_big },
+                              :email => "150x100#"}
 
   before_save :set_dimensions!
 
@@ -46,18 +46,18 @@ class ListingImage < ActiveRecord::Base
 
   def get_dimensions_for_style(style)
     case style
-    when :small_3x2
-      {width: 240, height: 160}
-    when :medium
-      {width: 360, height: 270}
-    when :thumb
-      {width: 120, height: 120}
-    when :email
-      {width: 150, height: 100}
-    when :original, :big
-      raise NotImplementedError.new("This feature is not implemented yet for style: #{style}")
-    else
-      raise ArgumentError.new("Unknown style: #{style}")
+      when :small_3x2
+        {width: 240, height: 160}
+      when :medium
+        {width: 360, height: 270}
+      when :thumb
+        {width: 120, height: 120}
+      when :email
+        {width: 150, height: 100}
+      when :original, :big
+        raise NotImplementedError.new("This feature is not implemented yet for style: #{style}")
+      else
+        raise ArgumentError.new("Unknown style: #{style}")
     end
   end
 
@@ -89,15 +89,15 @@ class ListingImage < ActiveRecord::Base
 
     # Works with uploaded files and existing files
     path_or_url = if !tempfile.nil? then
-      # Uploading new file
-      tempfile.path
-    else
-      if image.options[:storage] === :s3
-        image.url
-      else
-        image.path
-      end
-    end
+                    # Uploading new file
+                    tempfile.path
+                  else
+                    if image.options[:storage] === :s3
+                      image.url
+                    else
+                      image.path
+                    end
+                  end
 
     geometry = Paperclip::Geometry.from_file(path_or_url)
   end
@@ -158,19 +158,19 @@ class ListingImage < ActiveRecord::Base
 
   def self.scale_by(source, target, by)
     scale_factor = source[by] / target[by].to_f
-      {
+    {
         :width => (source[:width] / scale_factor),
         :height => (source[:height] / scale_factor)
-      }
+    }
   end
 
   def self.scale_to_cover(dimensions, area_to_cover)
     scaled_width = self.scale_by(dimensions, area_to_cover, :width)
     scaled_width_height = if scaled_width[:height] < area_to_cover[:height]
-      self.scale_by(scaled_width, area_to_cover, :height)
-    else
-      scaled_width
-    end
+                            self.scale_by(scaled_width, area_to_cover, :height)
+                          else
+                            scaled_width
+                          end
 
     return scaled_width_height
   end
