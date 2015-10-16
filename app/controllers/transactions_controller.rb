@@ -125,7 +125,7 @@ class TransactionsController < ApplicationController
         render 'status_error'
       end
     else
-      render 'status_error'
+      redirect_to  homepage_without_locale_path
     end
 
   end
