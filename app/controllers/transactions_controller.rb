@@ -3,7 +3,7 @@ class TransactionsController < ApplicationController
   before_filter only: [:show] do |controller|
     controller.ensure_logged_in t("layouts.notifications.you_must_log_in_to_view_your_inbox")
   end
-  protect_from_forgery except: :status
+
   before_filter do |controller|
     controller.ensure_logged_in t("layouts.notifications.you_must_log_in_to_do_a_transaction")
   end
@@ -89,6 +89,8 @@ class TransactionsController < ApplicationController
 
   def express_checkout
 
+    binding.pry
+
     listing = Listing.find(session[:listing_id].to_f)
 
     response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
@@ -117,6 +119,8 @@ class TransactionsController < ApplicationController
       }
 
       response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
+      reset_session
+      
       if response.message == "Success"
         render 'status'
       else
@@ -125,6 +129,7 @@ class TransactionsController < ApplicationController
     else
       render 'status_error'
     end
+
   end
 
   def express_token=(token)
