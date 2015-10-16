@@ -107,7 +107,6 @@ class TransactionsController < ApplicationController
 
 
   def status
-    binding.pry
     if (params[:token].present? && params[:PayerID].present?)
       token = params[:token]
       @response = EXPRESS_GATEWAY.details_for(token).params
