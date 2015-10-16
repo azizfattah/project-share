@@ -350,7 +350,6 @@ Kassi::Application.routes.draw do
           collection do
             get :express_checkout
             get :status
-            get :notification
           end
         end
 

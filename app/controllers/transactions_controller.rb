@@ -32,27 +32,39 @@ class TransactionsController < ApplicationController
 
       transaction_params = HashUtils.symbolize_keys({listing_id: listing_model.id}.merge(params.slice(:start_on, :end_on, :quantity, :delivery)))
 
-      start_date = Date.parse(transaction_params[:start_on])
-      session[:start_date] = transaction_params[:start_on]
+      if transaction_params[:start_on].present? && transaction_params[:end_on].present?
+        start_date = Date.parse(transaction_params[:start_on])
+        session[:start_date] = transaction_params[:start_on]
 
-      end_date = Date.parse(transaction_params[:end_on])
-      session[:end_date] = transaction_params[:end_on]
+        end_date = Date.parse(transaction_params[:end_on])
+        session[:end_date] = transaction_params[:end_on]
 
-      number_of_days = end_date.mjd - start_date.mjd + 1
+        number_of_days = end_date.mjd - start_date.mjd + 1
 
-      session[:number_of_days] = number_of_days
+        session[:number_of_days] = number_of_days
 
-      @listing = Listing.find(params[:listing_id])
+        @listing = Listing.find(params[:listing_id])
 
-      session[:listing_id] = params[:listing_id]
+        total_amount_in_cent = number_of_days * @listing.price_cents
 
-      total_amount_in_cent = number_of_days * @listing.price_cents
-      service_charge = total_amount_in_cent * 0.05 # 5% of total amount
+        community_id = PaypalAccount.where(active: true).where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL").first.community_id
 
-      total_amount_in_cent += service_charge
+        commision_from_seller = PaymentSettings.where(active: true).where(community_id: community_id).first.commission_from_seller # service charge from seller
 
-      session[:amount] = total_amount_in_cent
-      session[:service_charge] = service_charge
+        service_charge_in_cent = total_amount_in_cent * commision_from_seller / 100
+
+        @service_charge = service_charge_in_cent / 100
+
+        total_amount_in_cent = total_amount_in_cent + service_charge_in_cent
+
+        session[:amount] = total_amount_in_cent
+        session[:service_charge] = service_charge_in_cent
+
+      end
+
+      if params[:listing_id].present?
+        session[:listing_id] = params[:listing_id]
+      end
 
       case [process[:process], gateway, booking]
         when matches([:none])
@@ -80,38 +92,56 @@ class TransactionsController < ApplicationController
     listing = Listing.find(session[:listing_id].to_f)
 
     response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
-                                      ip: request.remote_ip,
-                                      return_url: "http://esignature.lvh.me:3000/en/transactions/status",
-                                      cancel_return_url: "http://esignature.lvh.me:3000/",
-                                      notify_url:"http://esignature.lvh.me:3000/en/transactions/notification",
-                                      currency: "USD",
-                                      allow_guest_checkout: true,
-                                      items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
-                                              {name: "Service Charge", amount: session[:service_charge]}
+                                              ip: request.remote_ip,
+                                              return_url: "http://esignature.lvh.me:3000/en/transactions/status",
+                                              cancel_return_url: "http://esignature.lvh.me:3000/",
+                                              currency: "USD",
+                                              allow_guest_checkout: true,
+                                              items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
+                                                      {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
-
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
-
-  end
-
-  def notification
 
   end
 
 
   def status
-    token = params[:token]
-    @response = EXPRESS_GATEWAY.details_for(token).params
-    express_purchase_options = {
-        :ip => request.remote_ip,
-        :token => params[:token],
-        :payer_id => params[:PayerID]
-    }
+    if (params[:token].present? && params[:PayerID].present?)
+      token = params[:token]
+      @response = EXPRESS_GATEWAY.details_for(token).params
+      express_purchase_options = {
+          :ip => request.remote_ip,
+          :token => params[:token],
+          :payer_id => params[:PayerID]
+      }
 
-   response =  EXPRESS_GATEWAY.purchase(1234, express_purchase_options)
+      response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
+
+      reset_session_params
+
+      if response.message == "Success"
+        render 'status'
+      else
+        render 'status_error'
+      end
+    else
+      redirect_to  homepage_without_locale_path
+    end
 
   end
+
+  def reset_session_params
+    session[:number_of_days] = nil
+    session[:listing_id] = nil
+    session[:amount] = nil
+    session[:service_charge] = nil
+    session[:number_of_days] = nil
+    session[:start_date] = nil
+    session[:end_date] = nil
+
+  end
+
   def express_token=(token)
     self[:express_token] = token
     if new_record? && !token.blank?
