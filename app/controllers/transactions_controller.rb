@@ -46,12 +46,19 @@ class TransactionsController < ApplicationController
         @listing = Listing.find(params[:listing_id])
 
         total_amount_in_cent = number_of_days * @listing.price_cents
-        service_charge = total_amount_in_cent * 0.05 # 5% of total amount
 
-        total_amount_in_cent += service_charge
+        community_id = PaypalAccount.where(active: true).where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL").first.community_id
+
+        commision_from_seller = PaymentSettings.where(active: true).where(community_id: community_id).first.commission_from_seller # service charge from seller
+
+        service_charge_in_cent = total_amount_in_cent * commision_from_seller / 100
+
+        @service_charge = service_charge_in_cent / 100
+
+        total_amount_in_cent = total_amount_in_cent + service_charge_in_cent
 
         session[:amount] = total_amount_in_cent
-        session[:service_charge] = service_charge
+        session[:service_charge] = service_charge_in_cent
 
       end
 
@@ -88,126 +95,37 @@ class TransactionsController < ApplicationController
                                               ip: request.remote_ip,
                                               return_url: "http://esignature.lvh.me:3000/en/transactions/status",
                                               cancel_return_url: "http://esignature.lvh.me:3000/",
-                                              notify_url: "http://70921e04.ngrok.io/en/transactions/notification",
                                               currency: "USD",
                                               allow_guest_checkout: true,
                                               items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
                                                       {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
-
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
 
   end
 
-  def notification
-
-    puts '=' * 200
-    puts params
-    puts '=' * 200
-
-  end
-
-  def adaptive_checkout
-
-    listing = Listing.find(session[:listing_id].to_f)
-
-
-    total_amount_in_cents = listing.price_cents
-
-    service_charge_rate = 5 #in percentage 5%
-
-    service_charge_in_cents = total_amount_in_cents * service_charge_rate / 100
-
-    net_total_amount_in_cents = total_amount_in_cents + service_charge_in_cents # Service charge is additional to total listing price
-
-    service_charge_in_dollor = service_charge_in_cents / 100.00 # this will be for secondary user (Admin of the system)
-
-    net_total_amount_in_dollar = net_total_amount_in_cents / 100.00 # this will be for primary receiver
-
-
-    seller_email = PaypalAccount.where(person_id: listing.author_id).last.email # This is the Primary receiver
-
-    system_admin_email = PaypalAccount.where(active: true)
-                             .where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL")
-                             .first.email # This is the Secondary receiver
-
-
-    recipients = [
-        {
-            email: seller_email,
-            amount: net_total_amount_in_dollar ,
-            primary: true
-        },
-
-        {
-            email: system_admin_email,
-            amount: service_charge_in_dollor,
-            primary: false
-        }
-    ]
-
-    response = ADAPTIVE_GATEWAY.setup_purchase(
-        action_type: "CREATE",
-        return_url: "http://esignature.lvh.me:3000/en/transactions/status",
-        cancel_url: "http://esignature.lvh.me:3000/",
-        ipn_notification_url: "http://0dbf7871.ngrok.io/en/transactions/notification",
-        receiver_list: recipients
-    )
-
-
-    ADAPTIVE_GATEWAY.set_payment_options(
-
-        pay_key: response["payKey"],
-        receiver_options: [
-            {
-                description: "Your purchase of #{listing.title}",
-                invoice_data: {
-                    item: [
-                        {
-                            name: listing.title,
-                            item_count: 1,
-                            item_price: net_total_amount_in_dollar,
-                            price: net_total_amount_in_dollar
-                        }
-                    ]
-                },
-                receiver: {email: seller_email}
-            },
-            {
-                description: "Service charge for purchase of #{listing.title} ",
-                invoice_data: {
-                    item: [
-                        {
-                            name: "Service charge for purchase of #{listing.title}",
-                            item_count: 1,
-                            item_price: service_charge_in_dollor,
-                            price: service_charge_in_dollor
-                        }
-                    ]
-                },
-                receiver: {email: system_admin_email}
-            }
-        ]
-    )
-
-
-
-    # For redirecting the customer to the actual paypal site to finish the payment.
-    redirect_to (ADAPTIVE_GATEWAY.redirect_url_for(response["payKey"]))
-  end
 
   def status
-    token = params[:token]
-    @response = EXPRESS_GATEWAY.details_for(token).params
-    express_purchase_options = {
-        :ip => request.remote_ip,
-        :token => params[:token],
-        :payer_id => params[:PayerID]
-    }
+    binding.pry
+    if (params[:token].present? && params[:PayerID].present?)
+      token = params[:token]
+      @response = EXPRESS_GATEWAY.details_for(token).params
+      express_purchase_options = {
+          :ip => request.remote_ip,
+          :token => params[:token],
+          :payer_id => params[:PayerID]
+      }
 
-    response = EXPRESS_GATEWAY.purchase(1234, express_purchase_options)
-
+      response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
+      if response.message == "Success"
+        render 'status'
+      else
+        render 'status_error'
+      end
+    else
+      render 'status_error'
+    end
   end
 
   def express_token=(token)
