@@ -96,7 +96,8 @@ class Category < ActiveRecord::Base
   end
 
   def has_own_or_subcategory_listings?
-    listings.count > 0 || subcategories.any? { |subcategory| !subcategory.listings.empty? }
+    puts "Line 99 #{self.id}"
+    listings.count > 0 || subcategories.present? && subcategories.any?{ |subcategory| !subcategory.listings.empty? }
   end
 
   def has_subcategories?
@@ -145,6 +146,14 @@ class Category < ActiveRecord::Base
     end
 
     return child_array.flatten
+  end
+
+  def descendant_level
+    if parent_id.blank?
+      0
+    else
+      self.parent.descendant_level + 1;
+    end
   end
 
   def icon_name
