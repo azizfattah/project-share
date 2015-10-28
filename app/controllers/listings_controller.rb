@@ -109,7 +109,21 @@ class ListingsController < ApplicationController
     end
   end
 
+  def listing_booking_date
+    booking_date = []
+
+    BookingInfo.where(listing_id: session[:listing_id]).map do |l|
+
+      booking_date_for_this_listing = (l.start_on..l.end_on).map(&:to_s)
+
+      booking_date = booking_date + booking_date_for_this_listing
+    end
+    render :json => { data: booking_date }
+
+  end
+
   def show
+    session[:listing_id] = @listing.id
     @selected_tribe_navi_tab = "home"
     unless current_user?(@listing.author)
       @listing.increment!(:times_viewed)

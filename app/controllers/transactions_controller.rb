@@ -105,7 +105,6 @@ class TransactionsController < ApplicationController
 
   end
 
-
   def status
     if (params[:token].present? && params[:PayerID].present?)
       token = params[:token]
@@ -118,14 +117,17 @@ class TransactionsController < ApplicationController
 
       response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
 
-      reset_session_params
 
       if response.message == "Success"
+        listing = Listing.find(session[:listing_id].to_f)
+        BookingInfo.create!(listing_id: listing.id, start_on:  session[:start_date].to_date, end_on:  session[:end_date].to_date)
         render 'status'
       else
         render 'status_error'
       end
+      reset_session_params
     else
+      reset_session_params
       redirect_to  homepage_without_locale_path
     end
 

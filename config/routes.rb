@@ -216,6 +216,7 @@ Kassi::Application.routes.draw do
         get :browse
         get :locations_json
         get :verification_required
+
       end
       resources :comments
       resources :listing_images do
@@ -299,6 +300,10 @@ Kassi::Application.routes.draw do
             put :close
             put :move_to_top
             put :show_in_updates_email
+          end
+
+          collection do
+            get :listing_booking_date
           end
         end
         resources :person_messages

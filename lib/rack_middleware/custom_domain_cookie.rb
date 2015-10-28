@@ -25,3 +25,4 @@ class CustomDomainCookie
     host !~ /#{@default_domain.sub(/^\./, '')}/i
   end
 end
+
