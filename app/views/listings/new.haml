@@ -4,52 +4,105 @@
       window.ST.initialize_new_listing_form_selectors("#{I18n.locale}", #{category_tree.to_json}, #{listing_form_menu_titles().to_json});
     });
 
+    $(document).on("change", "#category_id", function(event) {
+      var val = $(event.target).val();
+      $("#subcategory_id").attr("disabled", "disabled").html("");
+
+      if (val) {
+        $.ajax({
+          url: "/categories/" + val + "/children",
+          type: "get",
+          dataType: "json",
+          success: function(response) {
+            var html = "<option></option>";
+            if (response && response.results && response.results.length > 0) {
+              for (var i = 0; i < response.results.length; i++) {
+                var category = response.results[i];
+                html += "<option value='" + category.id + "'>" + category.display_name + "</option>";
+              }
+            }
+
+            $("#subcategory_id").removeAttr("disabled").html(html);
+            $("#subcategory_id").trigger("chosen:updated");
+          }
+        });
+      }
+    });
+
+    $(document).on("change", "#subcategory_id", function(event) {
+      var val = $(event.target).val();
+      $("#sub_subcategory_id").attr("disabled", "disabled").html("");
+
+      if (val) {
+        $.ajax({
+          url: "/categories/" + val + "/children",
+          type: "get",
+          dataType: "json",
+          success: function(response) {
+            var html = "<option></option>";
+            if (response && response.results && response.results.length > 0) {
+              for (var i = 0; i < response.results.length; i++) {
+                var category = response.results[i];
+                html += "<option value='" + category.id + "'>" + category.display_name + "</option>";
+              }
+            }
+
+            $("#sub_subcategory_id").removeAttr("disabled").html(html);
+            $("#sub_subcategory_id").trigger("chosen:updated");
+          }
+        });
+      }
+    });
+
+    $(document).on("change", "#sub_subcategory_id", function(event) {
+      var val = $(event.target).val();
+      if (val) {
+        $(".select-category-button").removeAttr("disabled");
+      } else {
+        $(".select-category-button").attr("disabled", "disabled");
+      }
+    });
+
+    $(document).on("click", ".select-category-button", function() {
+      var subSubcategoryId = $("#sub_subcategory_id").val();
+      var subcategoryId = $("#subcategory_id").val();
+      var categoryId = $("#category_id").val();
+
+      if (subSubcategoryId) {
+        location.href = "listings/new?category_id=" + categoryId + "&category=" + subcategoryId + "&subcategory=" + subSubcategoryId + "&listing_shape=" + #{ListingShape.where(:community_id => @current_community.id).last.id};
+      }
+    });
+
+    $(document).ready(function() {
+      $(".chosen-select").chosen();
+      $("#category_id").change();
+    });
+
 - content_for :extra_javascript do
   = javascript_include_tag "https://maps.google.com/maps/api/js?sensor=true"
 
 - content_for :title_header do
   %h1= t("listings.new.post_a_new_listing")
 #new_listing_form.new-listing-form.centered-section
-
-  #selected-groups
-    - if categories.size > 1
-      .selected-group{:name => "category"}
-        - categories.each do |value|
-          %a.select.selected.hidden{:data => {:id => value.id}}
-            .link-text= t(".selected_category", :category => value.display_name(I18n.locale))
-
-    - if subcategories.size > 1
-      .selected-group{:name => "subcategory"}
-        - subcategories.each do |value|
-          %a.select.selected.hidden{:data => {:id => value.id}}
-            .link-text= t(".selected_subcategory", :subcategory => value.display_name(I18n.locale))
-
-    - if shapes.size > 1
-      .selected-group{:name => "listing_shape"}
-        - shapes.each do |value|
-          %a.select.selected.hidden{:data => {:id => value[:id]}}
-            .link-text= t(".selected_transaction_type", :transaction_type => t(value[:name_tr_key]))
-
   %h2.listing-form-title{:id => "foo"}
 
   #option-groups
 
-    - if categories.size > 1
-      .option-group{:name => "category"}
-        - categories.each do |value|
-          %a.select.option.hidden{:data => {:id => value.id}}
-            .link-text= value.display_name(I18n.locale)
+    - if !@selected_category
+      .select-category-wrapper
+        .form-group
+          %label= t(".select_make")
+          = select_tag "category_id", options_for_select([["", nil]] + @current_community.top_level_categories.collect{|c| [c.display_name(I18n.locale), c.id] }), :class => "form-control chosen-select #{Utils.is_rtl_locale? ? "chosen-rtl" : ""}", "data-placeholder" => t(".select_make_value")
 
-    - if subcategories.size > 1
-      .option-group{:name => "subcategory"}
-        - subcategories.each do |value|
-          %a.select.option.hidden{:data => {:id => value.id}}
-            .link-text= value.display_name(I18n.locale)
+        .form-group
+          %label= t(".select_model")
+          = select_tag "subcategory_id", options_for_select([]), :class => "form-control chosen-select #{Utils.is_rtl_locale? ? "chosen-rtl" : ""}", :disabled => "disabled", "data-placeholder" => t(".select_model_value")
 
-    - if shapes.size > 1
-      .option-group{:name => "listing_shape"}
-        - shapes.each do |value|
-          %a.select.option.hidden{:data => {:id => value[:id]}}
-            .link-text= t(value[:name_tr_key])
+        .form-group
+          %label= t(".select_year")
+          = select_tag "sub_subcategory_id", options_for_select([]), :class => "form-control chosen-select #{Utils.is_rtl_locale? ? "chosen-rtl" : ""}", :disabled => "disabled", "data-placeholder" => t(".select_year_value")
+
+        .form-group
+          %button.select-category-button{:type => "button", :disabled => "disabled"}= t(".start")
 
   .js-form-fields.hidden

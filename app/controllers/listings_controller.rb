@@ -151,6 +151,10 @@ class ListingsController < ApplicationController
       all_locales: @current_community.locales
     )
 
+    if params[:category_id].present?
+      @selected_category = @current_community.categories.find(params[:category_id])
+    end
+
     render :new, locals: {
              categories: @current_community.top_level_categories,
              subcategories: @current_community.subcategories,
