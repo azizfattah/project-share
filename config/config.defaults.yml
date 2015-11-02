@@ -63,7 +63,6 @@ default: &default_settings
   paypal_partner_id: xxxxxxxxxxxxx # payerID for paypal platform owner account
   paypal_app_id: APP-80W284485P519543T # Global test id
   paypal_button_source: # Unique value given to you by your PayPal contact
-
   # Paypal environment to use. Either :sandbox or :live
   paypal_endpoint: sandbox
   # after authorization there is 3 day period before expiration
