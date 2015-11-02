@@ -107,12 +107,16 @@ class TransactionsController < ApplicationController
 
   def status
     if (params[:token].present? && params[:PayerID].present?)
+      listing = Listing.find(session[:listing_id].to_f)
       token = params[:token]
       @response = EXPRESS_GATEWAY.details_for(token).params
       express_purchase_options = {
           :ip => request.remote_ip,
           :token => params[:token],
-          :payer_id => params[:PayerID]
+          :payer_id => params[:PayerID],
+          items: [{name: listing.title + "( Start Date: "+ session[:start_date] + "   End Date: "+ session[:end_date] + ")", description: listing.description, quantity: session[:number_of_days], amount: listing.price_cents},
+                  {name: "Service Charge", amount: session[:service_charge]}
+          ]
       }
 
       response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
