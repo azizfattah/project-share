@@ -101,6 +101,7 @@ class TransactionsController < ApplicationController
                                                       {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
+    
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
 
   end
