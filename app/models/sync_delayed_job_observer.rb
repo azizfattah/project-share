@@ -58,5 +58,4 @@ class SyncDelayedJobObserver < ActiveRecord::Observer
       SyncDelayedJobObserver.enqueue(delayed_job)
     end
   end
-
 end

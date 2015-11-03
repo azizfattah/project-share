@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151001050711) do
+ActiveRecord::Schema.define(:version => 20151028072137) do
 
   create_table "auth_tokens", :force => true do |t|
     t.string   "token"
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(:version => 20151001050711) do
     t.datetime "updated_at",           :null => false
     t.string   "paypal_username_to",   :null => false
     t.string   "request_token",        :null => false
+  end
+
+  create_table "booking_infos", :force => true do |t|
+    t.integer  "listing_id"
+    t.date     "start_on"
+    t.date     "end_on"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "bookings", :force => true do |t|
