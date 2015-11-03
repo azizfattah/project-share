@@ -378,6 +378,11 @@ Kassi::Application.routes.draw do
 
     get '/:person_id/settings/profile', to: redirect("/%{person_id}/settings") #needed to keep old links working
 
+    resources :categories, :only => [] do
+      member do
+        get :children
+      end
+    end
   end # scope locale
 
   id_to_username = Proc.new do |params, req|
