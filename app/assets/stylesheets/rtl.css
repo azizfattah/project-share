@@ -9,7 +9,8 @@ body{
 }
 .row:after, .row-with-divider:after {
     content: "";
-    display: inline-table !important;
+    /*display: inline-table !important;*/
+    display: table !important;
     clear: both;
 }
 .toggle-menu a{
