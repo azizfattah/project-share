@@ -12,10 +12,10 @@ module PaypalService
         PayPal::SDK.configure(
             {
                 mode: 'sandbox',
-                username: 'vikas-facilitator_api1.esignature.com.np',
-                password: '1395372424',
-                signature: 'An5ns1Kso7MWUdW4ErQKJJJ4qi4-AeUWvcYwAah4uQWmMBoHdxQ52OhD',
-                app_id: 'APP-80W284485P519543T'
+                username: APP_CONFIG.paypal_username,
+                password: APP_CONFIG.paypal_password,
+                signature: APP_CONFIG.paypal_signature,
+                app_id: APP_CONFIG.paypal_app_id
             }
         )
       end

@@ -57,9 +57,9 @@ default: &default_settings
   braintree_expiration_period: 5
 
   # Paypal credentials for the platform owner.
-  paypal_username: vikas-facilitator_api1.esignature.com.np
-  paypal_password: '1395372424'
-  paypal_signature: An5ns1Kso7MWUdW4ErQKJJJ4qi4-AeUWvcYwAah4uQWmMBoHdxQ52OhD
+  paypal_username: aziz.bus_api1.me.com
+  paypal_password: '9XE7BPLNP88WQ5ET'
+  paypal_signature: AFcWxV21C7fd0v3bYYYRCpSSRl31AdwgUoikSc9XRuKysxGZFbDPUlDJ
   paypal_partner_id: xxxxxxxxxxxxx # payerID for paypal platform owner account
   paypal_app_id: APP-80W284485P519543T # Global test id
   paypal_button_source: # Unique value given to you by your PayPal contact
