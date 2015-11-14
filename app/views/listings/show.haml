@@ -66,6 +66,11 @@
                       - else
                         = t(".no_description")
 
+    %hr.listing-separator
+    .row
+      .col-12.pull-right
+        %b
+          = t(".listing_about_my_boat")
     .row
       .col-12.pull-right
         - if @listing.description && !@listing.description.blank?
