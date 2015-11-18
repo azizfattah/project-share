@@ -33,11 +33,11 @@
     .cal-month li{ float: right;}
     .cal-month li a{padding: 5px 10px; display: block; border: 1px solid #ccc; border-right: none; font-size: 14px;}
     .cal-month li a:hover{ background: #f7f7f7;}
+    .cal-month li a.current{ font-weight: bold; color: #fff; background: #22608d; cursor: default; border-color: #22608d }
     .cal-month li:first-child a{border-right: 1px solid #ccc; border-radius: 0 15px 15px 0; -moz-border-radius: 0 15px 15px 0; -webkit-border-radius: 0 15px 15px 0;}
     .cal-month li:last-child a{ border-radius: 15px 0 0 15px; -moz-border-radius: 15px 0 0 15px; -webkit-border-radius: 15px 0 0 15px;}
-    .cal-month li a.current{ font-weight: bold; color: #fff; background: #22608d; cursor: default; border-color: #22608d }
 
-    .days-of-week{ color: #666; display: table-row;}
+    .days-of-week{ display: table-row;}
     .days-of-week li{ display: table-cell; padding: 3px 5px;}
 
     .days-container{ display: table; width: 100%; border: 1px solid #ccc;}
@@ -54,12 +54,11 @@ border-color: #ffb700 transparent transparent transparent; position: absolute; t
     .edit-day-form .day-form-content{ background: #f7f7f7; padding: 15px;}
     p.form-title{ text-align: center; margin-bottom: 5px;}
     .radiobutton label{ margin: 0; cursor: pointer; font-weight: normal; margin-top: 5px;}
-    .radiobutton label:hover{ color: #22608d; }
+    .radiobutton label:hover , .radiobutton label.current{ color: #22608d; }
     .radiobutton input{ position: relative; top: 2px; margin-left: 3px;}
-    .radiobutton label.current{color: #22608d;}
 
     .edit-price{ padding: 10px; background:#fff; margin-top: 10px;}
-    .form-actions{ padding: 15px; border-top:1px dashed #ccc; background: #f1f1f1; border-radius: 0 0 5px 5px; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px;}
+    .form-actions{ padding: 15px; border-top:1px dashed #ccc; background: #eeeeee; border-radius: 0 0 5px 5px; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px;}
     .form-actions .btn{display: inline-block; font-size: 14px; height: auto; line-height: 18px; margin: 0; padding: 10px;}
     .form-actions button.btn{ font-weight: bold; padding: 10px 25px;}
   </style>
