@@ -1,0 +1,298 @@
+!!!
+/[if lt IE 7] <html lang="en" class="no-js oldie ie6">
+/[if IE 7 ] <html lang="en" class="no-js oldie ie7">
+/[if IE 8 ] <html lang="en" class="no-js oldie ie8">
+/ [if (gt IE 8)|!(IE)]><!
+%html.js.no-touch.no-androidprejellybean{:dir => "", :lang => "en", :style => ""}
+  / <![endif]
+  %head
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "IE=edge", "http-equiv" => "X-UA-Compatible"}/
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}/
+    %title Garebaat | Calendar
+    %link{:href => "https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700", :rel => "stylesheet", :type => "text/css"}/
+    %link{:href => "css/site-styles.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}/
+    :css
+      /* Calendar Styles go here */
+          .calendar-wrapper {font-family: arial; color: #666; font-size: 13px; line-height: 20px; direction: rtl;}
+          .calendar-wrapper ul{ padding: 0; list-style: none;}
+          .main-calendar{ float: right; width: 75%;}
+          .selected-content{ float: left; width: 25%; padding-right: 20px; padding-top: 97px;}
+
+          .calendar-actions{ text-align: center;}
+          .cal-year{ position: relative; height: 40px; margin-bottom: 10px;}
+          .cal-year strong{ color: #22608d; font-size: 34px; margin-top: 8px; display: inline-block;}
+          .cal-year a{ position: absolute; top: 0px; display: inline-block; width: 40px; height: 40px; padding: 7px; border: 1px solid #ccc; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; font-family: tahoma; font-size: 24px;}
+          .cal-year a:hover{ background:#f7f7f7;}
+          .cal-year a.prev-year{ right: 0;}
+          .cal-year a.next-year{ left: 0;}
+
+          .cal-month{ margin-bottom: 10px;}
+          .cal-month ul{ display: inline-block;}
+          .cal-month li{ float: right;}
+          .cal-month li a{padding: 5px 10px; display: block; border: 1px solid #ccc; border-right: none; font-size: 14px;}
+          .cal-month li a:hover{ background: #f7f7f7;}
+          .cal-month li a.current{ font-weight: bold; color: #fff; background: #22608d; cursor: default; border-color: #22608d }
+          .cal-month li:first-child a{border-right: 1px solid #ccc; border-radius: 0 15px 15px 0; -moz-border-radius: 0 15px 15px 0; -webkit-border-radius: 0 15px 15px 0;}
+          .cal-month li:last-child a{ border-radius: 15px 0 0 15px; -moz-border-radius: 15px 0 0 15px; -webkit-border-radius: 15px 0 0 15px;}
+
+          .days-of-week{ display: table-row;}
+          .days-of-week li{ display: table-cell; padding: 3px 5px;}
+
+          .days-container{ display: table; width: 100%; border: 1px solid #ccc;}
+          .days-list{display: table-row;}
+          .days-list li{ border-left: 1px solid #ccc; border-top:1px solid #ccc; display: table-cell; padding:0 5px; background: #f7f7f7; font-size: 14px; cursor: pointer; height: 90px;}
+          .days-list li:last-child{ border-left: none;}
+          .days-list li.tile-has-data { background: #fff; position: relative;}
+          .days-list li.tile-has-data:before{width: 0; height: 0; border-style: solid; border-width: 15px 15px 0 0;
+      border-color: #ffb700 transparent transparent transparent; position: absolute; top: 0; left: 0; content: " ";}
+          .days-list li:hover , .days-list li.selected{ box-shadow: 0 0 5px #ccc inset}
+          .tile-price{ margin-top: 45px; font-weight: bold;}
+
+          .edit-day-form{margin-bottom: 20px;}
+          .edit-day-form .day-form-content{ background: #f7f7f7; padding: 15px;}
+          p.form-title{ text-align: center; margin-bottom: 5px;}
+          .radiobutton label{ margin: 0; cursor: pointer; font-weight: normal; margin-top: 5px;}
+          .radiobutton label:hover , .radiobutton label.current{ color: #22608d; }
+          .radiobutton input{ position: relative; top: 2px; margin-left: 3px;}
+
+          .edit-price{ padding: 10px; background:#fff; margin-top: 10px;}
+          .form-actions{ padding: 15px; border-top:1px dashed #ccc; background: #eeeeee; border-radius: 0 0 5px 5px; -moz-border-radius: 0 0 5px 5px; -webkit-border-radius: 0 0 5px 5px;}
+          .form-actions .btn{display: inline-block; font-size: 14px; height: auto; line-height: 18px; margin: 0; padding: 10px;}
+          .form-actions button.btn{ font-weight: bold; padding: 10px 25px;}
+  %body
+    / Page Header start
+    %header.header{:style => "background:url('img/header-ar.png') no-repeat;"}
+      .header-wrapper
+    / Page Header End
+    / Page Search start
+    %section.marketplace-lander{:style => "background:url('img/search-ar.png') no-repeat; height:96px;"}
+      %div
+    / Page Search End
+    / Page Content start
+    %article.page-content
+      .wrapper
+        / Developer will use the following code to add the calendar
+        .calendar-wrapper.clearfix
+          .main-calendar
+            .calendar-actions
+              .cal-year
+                %strong 2015
+                %a.prev-year{:href => "javascript:;", :title => "السنة السابقة"}
+                %a.next-year{:href => "javascript:;", :title => "السنة التالية"} >
+              .cal-month
+                %ul.clearfix
+                  %li
+                    %a{:href => "javascript:;"} يناير
+                  %li
+                    %a{:href => "javascript:;"} فبراير
+                  %li
+                    %a{:href => "javascript:;"} مارس
+                  %li
+                    %a{:href => "javascript:;"} إبريل
+                  %li
+                    %a{:href => "javascript:;"} ماية
+                  %li
+                    %a{:href => "javascript:;"} يونية
+                  %li
+                    %a{:href => "javascript:;"} يوليو
+                  %li
+                    %a{:href => "javascript:;"} أغسطس
+                  %li
+                    %a{:href => "javascript:;"} سبتمبر
+                  %li
+                    %a{:href => "javascript:;"} أكتوبر
+                  %li
+                    %a.current{:href => "javascript:;"} نوفمبر
+                  %li
+                    %a{:href => "javascript:;"} ديسمبر
+            .days-container
+              %ul.days-of-week.clearfix
+                %li السبت
+                %li الأحد
+                %li الاثنين
+                %li الثلاثاء
+                %li الاربعاء
+                %li الخميس
+                %li الجمعة
+              %ul.days-list.clearfix
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 1
+                  .tile-price
+                    %span $300
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 2
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 3
+                  .tile-price
+                    %span $180
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 4
+                  .tile-price
+                    %span $120
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 5
+                  .tile-price
+                    %span $200
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 6
+                  .tile-price
+                    %span $200
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 7
+                  .tile-price
+                    %span $200
+              %ul.days-list.clearfix
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 8
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 9
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 10
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 11
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 12
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 13
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 14
+              %ul.days-list.clearfix
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 15
+                  .tile-price
+                    %span $140
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 16
+                  .tile-price
+                    %span $140
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 17
+                  .tile-price
+                    %span $500
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 18
+                  .tile-price
+                    %span $200
+                %li.tile.tile-has-data.selected{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 19
+                  .tile-price
+                    %span $120
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 20
+                  .tile-price
+                    %span $120
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 21
+                  .tile-price
+                    %span $200
+              %ul.days-list.clearfix
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 22
+                  .tile-price
+                    %span $300
+                %li.tile.tile-has-data{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 23
+                  .tile-price
+                    %span $180
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 24
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 25
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 26
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 27
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 28
+              %ul.days-list.clearfix
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 29
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number 30
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number Dec 1
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number Dec 2
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number Dec 3
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number Dec 4
+                %li.tile{:title => "اضغط لتعديل البيانات"}
+                  .tile-date
+                    %span.day-number Dec 5
+          .selected-content
+            .edit-day-form
+              .day-form-content
+                قم بإختيار يوما
+                %strong لتعديل
+                بياناته.
+            .edit-day-form
+              %p.form-title
+                %strong تعديل بيانات 19 نوفمبر
+              .day-form-content
+                .radiobutton
+                  %label.current
+                    %input{:checked => "checked", :name => "", :type => "radio"}/
+                    غير متاح
+                .radiobutton
+                  %label
+                    %input{:name => "", :type => "radio"}/
+                    متاح
+              .form-actions
+                %button.btn حفظ التعديلات
+                %a.btn{:href => "javascript:;"} الغاء
+            .edit-day-form
+              %p.form-title
+                %strong تعديل بيانات 19 نوفمبر
+              .day-form-content
+                .radiobutton
+                  %label.current
+                    %input{:name => "", :type => "radio"}/
+                    غير متاح
+                .radiobutton
+                  %label
+                    %input{:checked => "checked", :name => "", :type => "radio"}/
+                    متاح
+                .edit-price
+                  %p السعر في الليلة الواحدة ($)
+                  %input{:placeholder => "مثال: 200", :type => "text"}/
+              .form-actions
+                %button.btn حفظ التعديلات
+                %a.btn{:href => "javascript:;"} الغاء
+        / Developer's Code End
+    / Page Content End

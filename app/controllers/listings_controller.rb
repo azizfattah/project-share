@@ -82,6 +82,10 @@ class ListingsController < ApplicationController
     end
   end
 
+  def calender
+    render "calender-#{params[:locale]}", layout: "calender-#{params[:locale]}"
+  end
+
   def listing_bubble
     if params[:id]
       @listing = Listing.find(params[:id])
