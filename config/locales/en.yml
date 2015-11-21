@@ -1657,6 +1657,19 @@ en:
       month: month
     verification_required:
       verification_required: "Verification required"
+    calender:
+      new_title: Choose listing availability
+      click_to_edit: Click to edit
+      select_any_day_to: Select any day to
+      edit: Edit
+      it: it
+      edit_status: Edit Status
+      available: Available
+      not_available: Not Available
+      save: SAVE
+      cancel: Cancel
+      price_for_night: Price for the night ($)
+      example_price: "Ex: 200"
   listing_conversations:
     preauthorize:
       details: Details

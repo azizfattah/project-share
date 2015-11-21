@@ -1652,6 +1652,19 @@ ar:
       month: شهر
     verification_required:
       verification_required: "مطلوب التحقق "
+    calender:
+      new_title: تعديل المعروض
+      click_to_edit: اضغط لتعديل السعر
+      select_any_day_to: قم بإختيار يوما
+      edit: لتعديل
+      it: بياناته
+      edit_status: تعديل بيانات
+      available: متاح
+      not_available: غير متاح
+      save: حفظ التعديلات
+      cancel: الغاء
+      price_for_night: السعر في الليلة الواحدة ($)
+      example_price: "مثال: 200"
   listing_conversations:
     preauthorize:
       details: التفاصيل

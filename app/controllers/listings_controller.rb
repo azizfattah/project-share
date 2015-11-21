@@ -83,7 +83,7 @@ class ListingsController < ApplicationController
   end
 
   def calender
-    render "calender-#{params[:locale]}", layout: "calender-#{params[:locale]}"
+    render "calender"#, layout: "calender-#{params[:locale]}"
   end
 
   def listing_bubble

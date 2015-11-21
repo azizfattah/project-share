@@ -1,12 +1,15 @@
 / Page Header start
-%header.header{:style => "background:url('/assets/header.png') no-repeat;"}
-  .header-wrapper
+/ %header.header{:style => "background:url('/assets/header.png') no-repeat;"}
+/   .header-wrapper
 / Page Header End
 / Page Search start
-%section.marketplace-lander{:style => "background:url('/assets/search.png') no-repeat; height:96px;"}
-  %div
+/ %section.marketplace-lander{:style => "background:url('/assets/search.png') no-repeat; height:96px;"}
+/   %div
 / Page Search End
 / Page Content start
+- content_for :title_header do
+  %h1= t("listings.calender.new_title")
+
 %article.page-content
   .wrapper
     / Developer will use the following code to add the calendar
@@ -15,45 +18,45 @@
         .calendar-actions
           .cal-year
             %strong 2015
-            %a.prev-year{:href => "javascript:;", :title => "Previous year"}
+            %a.prev-year{:href => "javascript:;", :title => "Previous year"} <
             %a.next-year{:href => "javascript:;", :title => "Next year"} >
           .cal-month
             %ul.clearfix
               %li
-                %a{:href => "javascript:;"} Jan
+                %a{:href => "javascript:;"}= t("datepicker.months.january")
               %li
-                %a{:href => "javascript:;"} Feb
+                %a{:href => "javascript:;"}= t("datepicker.months.february")
               %li
-                %a{:href => "javascript:;"} Mar
+                %a{:href => "javascript:;"}= t("datepicker.months.march")
               %li
-                %a{:href => "javascript:;"} April
+                %a{:href => "javascript:;"}= t("datepicker.months.april")
               %li
-                %a{:href => "javascript:;"} May
+                %a{:href => "javascript:;"}= t("datepicker.months.may")
               %li
-                %a{:href => "javascript:;"} June
+                %a{:href => "javascript:;"}= t("datepicker.months.june")
               %li
-                %a{:href => "javascript:;"} July
+                %a{:href => "javascript:;"}= t("datepicker.months.july")
               %li
-                %a{:href => "javascript:;"} Aug
+                %a{:href => "javascript:;"}= t("datepicker.months.august")
               %li
-                %a{:href => "javascript:;"} Sept
+                %a{:href => "javascript:;"}= t("datepicker.months.september")
               %li
-                %a{:href => "javascript:;"} Oct
+                %a{:href => "javascript:;"}= t("datepicker.months.october")
               %li
-                %a.current{:href => "javascript:;"} Nov
+                %a.current{:href => "javascript:;"}= t("datepicker.months.november")
               %li
-                %a{:href => "javascript:;"} Dec
+                %a{:href => "javascript:;"}= t("datepicker.months.december")
         .days-container
           %ul.days-of-week.clearfix
-            %li Sat
-            %li Sun
-            %li Mon
-            %li Tue
-            %li Wed
-            %li Thu
-            %li Fri
+            %li= t("datepicker.days_short.saturday")
+            %li= t("datepicker.days_short.sunday")
+            %li= t("datepicker.days_short.monday")
+            %li= t("datepicker.days_short.tuesday")
+            %li= t("datepicker.days_short.wednesday")
+            %li= t("datepicker.days_short.thursday")
+            %li= t("datepicker.days_short.friday")
           %ul.days-list.clearfix
-            %li.tile.tile-has-data{:title => "Click to edit"}
+            %li.tile.tile-has-data{:title => t("listings.calnder.new_title")}
               .tile-date
                 %span.day-number 1
               .tile-price
@@ -195,41 +198,26 @@
       .selected-content
         .edit-day-form
           .day-form-content
-            Select any day to
-            %strong Edit
-            it.
+            = t('.select_any_day_to')
+            %strong= t('.edit')
+            = t('.it')
         .edit-day-form
           %p.form-title
-            %strong Edit Status, November 19
+            %strong= "#{t(".edit_status")} November 19"
           .day-form-content
             .radiobutton
               %label.current
-                %input{:checked => "checked", :name => "", :type => "radio"}/
-                Not Available
+                %input{:name => "listing_available", :type => "radio"}/
+                = t('.not_available')
             .radiobutton
               %label
-                %input{:name => "", :type => "radio"}/
-                Available
-          .form-actions
-            %button.btn SAVE
-            %a.btn{:href => "javascript:;"} Cancel
-        .edit-day-form
-          %p.form-title
-            %strong Edit Status, November 19
-          .day-form-content
-            .radiobutton
-              %label.current
-                %input{:name => "", :type => "radio"}/
-                Not Available
-            .radiobutton
-              %label
-                %input{:checked => "checked", :name => "", :type => "radio"}/
-                Available
+                %input{:checked => "checked", :name => "listing_available", :type => "radio"}/
+                = t('.available')
             .edit-price
-              %p Price for the night ($)
-              %input{:placeholder => "Ex: 200", :type => "text"}/
+              %p= t('.price_for_night')
+              %input{:placeholder => t('.example_price'), :type => "text"}/
           .form-actions
-            %button.btn SAVE
-            %a.btn{:href => "javascript:;"} Cancel
+            %button.btn= t('.save')
+            %a.btn{:href => "javascript:;"}= t('.cancel')
     / Developer's Code End
 / Page Content End
