@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151028072137) do
+ActiveRecord::Schema.define(:version => 20151121233251) do
 
   create_table "auth_tokens", :force => true do |t|
     t.string   "token"
@@ -977,6 +977,17 @@ ActiveRecord::Schema.define(:version => 20151028072137) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  create_table "price_tags", :force => true do |t|
+    t.float    "price"
+    t.date     "date"
+    t.integer  "listing_id"
+    t.boolean  "available"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "price_tags", ["listing_id"], :name => "index_price_tags_on_listing_id"
 
   create_table "prospect_emails", :force => true do |t|
     t.string   "email"

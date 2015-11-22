@@ -1670,6 +1670,7 @@ en:
       cancel: Cancel
       price_for_night: Price for the night ($)
       example_price: "Ex: 200"
+      un_available_listing: Unavailable
   listing_conversations:
     preauthorize:
       details: Details

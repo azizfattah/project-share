@@ -83,6 +83,12 @@ class ListingsController < ApplicationController
   end
 
   def calender
+    @current_date = Date.parse(params[:start_date]) if params[:start_date]
+    @current_date ||= Date.today.beginning_of_month
+    params[:start_date] = @current_date.to_s
+
+    @listing = Listing.find(params[:id])
+    @price_tags = @listing.price_tags
     render "calender"#, layout: "calender-#{params[:locale]}"
   end
 

@@ -1,12 +1,15 @@
 / Page Header start
-%header.header{:style => "background:url('/assets/header-ar.png') no-repeat;"}
-  .header-wrapper
+/ %header.header{:style => "background:url('/assets/header-ar.png') no-repeat;"}
+/   .header-wrapper
 / Page Header End
 / Page Search start
-%section.marketplace-lander{:style => "background:url('/assets/search-ar.png') no-repeat; height:96px;"}
-  %div
+/ %section.marketplace-lander{:style => "background:url('/assets/search-ar.png') no-repeat; height:96px;"}
+/   %div
 / Page Search End
 / Page Content start
+- content_for :title_header do
+  %h1= t("listings.calender.new_title")
+
 %article.page-content
   .wrapper
     / Developer will use the following code to add the calendar
@@ -15,7 +18,7 @@
         .calendar-actions
           .cal-year
             %strong 2015
-            %a.prev-year{:href => "javascript:;", :title => "السنة السابقة"}
+            %a.prev-year{:href => "javascript:;", :title => "السنة السابقة"} <
             %a.next-year{:href => "javascript:;", :title => "السنة التالية"} >
           .cal-month
             %ul.clearfix

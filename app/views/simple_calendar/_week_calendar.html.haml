@@ -1,0 +1,28 @@
+.days-container
+  %ul.days-of-week.clearfix
+    - date_range.slice(0, 7).each do |day|
+      %li= I18n.t("date.abbr_day_names")[day.wday]
+  - date_range.each_slice(7) do |week|
+    %ul.days-list.clearfix
+      - week.each do |date|
+        - price_tag = sorted_events.fetch(date, []).first
+        - is_available = price_tag.blank? || price_tag.available
+        %li.tile{title: 'Click to edit', class: (is_available && 'tile-has-data')}
+          .tile-date
+            %span.day-number
+              -if date.month == @current_date.month
+                = date.day
+              -else
+                = "#{date.strftime("%b")} #{date.day}"
+          - if is_available
+            .tile-price
+              %span
+                - if price_tag.present?
+                  = "$#{price_tag.price}"
+                - else
+                  = @listing.price.to_s
+
+
+/  = link_to "Previous", start_date: date_range.first - 1.day
+/  Week #{start_date.strftime("%U").to_i}
+/  \#{link_to "Next", start_date: date_range.last + 1.day}
