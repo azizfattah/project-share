@@ -1,9 +1,74 @@
+
 - content_for :extra_javascript do
   :coffee
+    $("#js-night-price").numeric()
+    months_names = #{Date::MONTHNAMES.compact.each_with_index.inject({}){|hash, m| hash.update(m[1] => t("datepicker.months."+m[0].downcase))}.to_json}
+    default_price_tag = ()->
+      return {price: #{@listing.price}, available: true, listing_id: #{@listing.id}}
+
+    get_localized_date = (cell_date)->
+      localized_month = months_names[cell_date.getMonth()]
+      return (localized_month + " " +cell_date.getDate())
+
+    populate_availability_form = (price_tag, cell_date, cell)->
+      price_tag ?= default_price_tag()
+      localized_date = get_localized_date(cell_date)
+
+      $("#js-form-date").text(localized_date)
+      $("input[name=listing_available][value="+price_tag.available+"]").prop("checked", true).trigger("change")
+      $("#js-night-price").val(price_tag.price)
+      $("#js-price-tag-form").data("day_cell", cell)
+
+    get_price_tag_info = ()->
+      day_cell = $($("#js-price-tag-form").data("day_cell"))
+      price_tag = day_cell.data("priceTag") ? default_price_tag()
+      price_tag.date = day_cell.data("cellDate")
+      price_tag.price = $("#js-night-price").val() if $("#js-night-price").val() > 0
+      price_tag.available = $("input[name=listing_available]:checked").val()
+
+      return price_tag
+
+    populate_cell = (day_cell, price_tag)->
+      day_cell.data("priceTag", price_tag)
+      if price_tag.available
+        day_cell.addClass("tile-has-data")
+        day_cell.find(".js-price-field").text("$"+price_tag.price)
+      else
+        day_cell.removeClass("tile-has-data")
+        day_cell.find(".js-price-field").text("")
+
+
     $ ->
-      $("#js-cal-months a").click (e)->
+      $(".js-cal-day").click (e)->
+        price_tag = $(e.currentTarget).data("priceTag")
+        cell_date = new Date($(e.currentTarget).data("cellDate"))
+        populate_availability_form(price_tag, cell_date, e.currentTarget)
 
+      $("input[name=listing_available]").change (e)->
+        if $(e.currentTarget).val() == "false"
+          $("#js-edit-price").hide()
+        else
+          $("#js-edit-price").show()
 
+      $("#js-save-btn").click ()->
+        price_tag = get_price_tag_info()
+        method = null
+        url = "/listings/#{@listing.id}/price_tags"
+        if price_tag.id?
+          method = "PUT"
+          url += "/"+price_tag.id
+        else
+          method = "POST"
+        price_tags_params = $.extend({}, price_tag)
+        delete price_tags_params["id"]
+        $.ajax
+          type: method
+          url: url
+          dataType: "json"
+          data: {price_tag: price_tags_params}
+          success: (data)->
+            day_cell = $($("#js-price-tag-form").data("day_cell"))
+            populate_cell(day_cell, data)
 
 / Page Header start
 / %header.header{:style => "background:url('/assets/header.png') no-repeat;"}
@@ -27,7 +92,7 @@
             %strong#js-year= @current_date.year
             =link_to "<", {start_date: @current_date.prev_year}, {class: 'prev-year', title: 'Previous year'}
             =link_to ">", {start_date: @current_date.next_year}, {class: 'next-year', title: 'Next year'}
-          #js-cal-months.cal-month
+          .cal-month
             %ul.clearfix
               - month_start = @current_date.beginning_of_year
               - (1..12).each do
@@ -35,7 +100,7 @@
                   =link_to t("datepicker.months.#{month_start.strftime('%B').downcase}"), {start_date: month_start}, {class: (month_start.month == @current_date.month && 'current')}
                   - month_start=month_start.next_month
         = render partial: "calender", locals: {price_tags: @price_tags}
-      .selected-content
+      #js-price-tag-form.selected-content
         .edit-day-form
           .day-form-content
             = t('.select_any_day_to')
@@ -43,22 +108,24 @@
             = t('.it')
         .edit-day-form
           %p.form-title
-            %strong= "#{t(".edit_status")} November 19"
+            %strong
+              %span= t(".edit_status")
+              %span#js-form-date= "#{t("datepicker.months.#{@current_date.strftime('%B').downcase}")} #{@current_date.day}"
           .day-form-content
             .radiobutton
               %label.current
-                %input{:name => "listing_available", :type => "radio"}/
+                %input{name: "listing_available", type: "radio", value: "false"}/
                 = t('.not_available')
             .radiobutton
               %label
-                %input{:checked => "checked", :name => "listing_available", :type => "radio"}/
+                %input{checked: "checked", name: "listing_available", type: "radio", value: "true"}/
                 = t('.available')
-            .edit-price
+            #js-edit-price.edit-price
               %p= t('.price_for_night')
-              %input{:placeholder => t('.example_price'), :type => "text"}/
+              %input#js-night-price{:placeholder => t('.example_price'), :type => "text"}/
           .form-actions
-            %button.btn= t('.save')
-            %a.btn{:href => "javascript:;"}= t('.cancel')
+            %button#js-save-btn.btn= t('.save')
+            %a#js-cancel-btn.btn{:href => "javascript:;"}= t('.cancel')
 
 
     / Developer's Code End

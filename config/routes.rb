@@ -226,6 +226,7 @@ Kassi::Application.routes.draw do
           put :add_from_url
         end
       end
+      resources :price_tags, only: [:create, :update]
     end
 
     resources :listing_images do

@@ -7,7 +7,7 @@
       - week.each do |date|
         - price_tag = sorted_events.fetch(date, []).first
         - is_available = price_tag.blank? || price_tag.available
-        %li.tile{title: 'Click to edit', class: (is_available && 'tile-has-data')}
+        %li.js-cal-day.tile{title: 'Click to edit', class: (is_available && 'tile-has-data'), data: {price_tag: price_tag.try(:to_json, {except: [:created_at, :updated_at]}), "cell-date" => date.to_s}}
           .tile-date
             %span.day-number
               -if date.month == @current_date.month
@@ -16,11 +16,11 @@
                 = "#{date.strftime("%b")} #{date.day}"
           - if is_available
             .tile-price
-              %span
+              %span.js-price-field
                 - if price_tag.present?
                   = "$#{price_tag.price}"
                 - else
-                  = @listing.price.to_s
+                  = "$#{@listing.price.to_s}"
 
 
 /  = link_to "Previous", start_date: date_range.first - 1.day

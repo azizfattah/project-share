@@ -17,6 +17,12 @@
 
 class PriceTag < ActiveRecord::Base
   belongs_to :listing
-  attr_accessible :available, :date, :price
-  validate :available, :date, :listing, presence: true
+  attr_accessible :available, :date, :price, :listing_id
+  validates :date, :listing, presence: true
+
+  def as_json(*args)
+    super(except: [:created_at, :updated_at])
+  end
+
 end
+
