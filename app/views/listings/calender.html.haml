@@ -82,50 +82,48 @@
 - content_for :title_header do
   %h1= t("listings.calender.new_title")
 
-%article.page-content
-  .wrapper
-    / Developer will use the following code to add the calendar
-    .calendar-wrapper.clearfix
-      .main-calendar
-        .calendar-actions
-          .cal-year
-            %strong#js-year= @current_date.year
-            =link_to "<", {start_date: @current_date.prev_year}, {class: 'prev-year', title: 'Previous year'}
-            =link_to ">", {start_date: @current_date.next_year}, {class: 'next-year', title: 'Next year'}
-          .cal-month
-            %ul.clearfix
-              - month_start = @current_date.beginning_of_year
-              - (1..12).each do
-                %li
-                  =link_to t("datepicker.months.#{month_start.strftime('%B').downcase}"), {start_date: month_start}, {class: (month_start.month == @current_date.month && 'current')}
-                  - month_start=month_start.next_month
-        = render partial: "calender", locals: {price_tags: @price_tags}
-      #js-price-tag-form.selected-content
-        .edit-day-form
-          .day-form-content
-            = t('.select_any_day_to')
-            %strong= t('.edit')
-            = t('.it')
-        .edit-day-form
-          %p.form-title
-            %strong
-              %span= t(".edit_status")
-              %span#js-form-date= "#{t("datepicker.months.#{@current_date.strftime('%B').downcase}")} #{@current_date.day}"
-          .day-form-content
-            .radiobutton
-              %label.current
-                %input{name: "listing_available", type: "radio", value: "false"}/
-                = t('.not_available')
-            .radiobutton
-              %label
-                %input{checked: "checked", name: "listing_available", type: "radio", value: "true"}/
-                = t('.available')
-            #js-edit-price.edit-price
-              %p= t('.price_for_night')
-              %input#js-night-price{:placeholder => t('.example_price'), :type => "text"}/
-          .form-actions
-            %button#js-save-btn.btn= t('.save')
-            %a#js-cancel-btn.btn{:href => "javascript:;"}= t('.cancel')
+/ Developer will use the following code to add the calendar
+.calendar-wrapper.clearfix
+  .main-calendar
+    .calendar-actions
+      .cal-year
+        %strong#js-year= @current_date.year
+        =link_to "<", {start_date: @current_date.prev_year}, {class: 'prev-year', title: 'Previous year'}
+        =link_to ">", {start_date: @current_date.next_year}, {class: 'next-year', title: 'Next year'}
+      .cal-month
+        %ul.clearfix
+          - month_start = @current_date.beginning_of_year
+          - (1..12).each do
+            %li
+              =link_to t("datepicker.months.#{month_start.strftime('%B').downcase}"), {start_date: month_start}, {class: (month_start.month == @current_date.month && 'current')}
+              - month_start=month_start.next_month
+    = render partial: "calender", locals: {price_tags: @price_tags}
+  #js-price-tag-form.selected-content
+    .edit-day-form
+      .day-form-content
+        = t('.select_any_day_to')
+        %strong= t('.edit')
+        = t('.it')
+    .edit-day-form
+      %p.form-title
+        %strong
+          %span= t(".edit_status")
+          %span#js-form-date= "#{t("datepicker.months.#{@current_date.strftime('%B').downcase}")} #{@current_date.day}"
+      .day-form-content
+        .radiobutton
+          %label.current
+            %input{name: "listing_available", type: "radio", value: "false"}/
+            = t('.not_available')
+        .radiobutton
+          %label
+            %input{checked: "checked", name: "listing_available", type: "radio", value: "true"}/
+            = t('.available')
+        #js-edit-price.edit-price
+          %p= t('.price_for_night')
+          %input#js-night-price{:placeholder => t('.example_price'), :type => "text"}/
+      .form-actions
+        %button#js-save-btn.btn= t('.save')
+        %a#js-cancel-btn.btn{:href => "javascript:;"}= t('.cancel')
 
 
     / Developer's Code End
