@@ -30,7 +30,7 @@
     li{
       float: left;
       a{
-        padding: 5px 10px; display: block; border: 1px solid #ccc; border-left: none;
+        padding: 5px 6px; font-size: 12px; display: block; border: 1px solid #ccc; border-left: none;
         &:hover{ background: #f7f7f7;}
         &.current{ font-weight: bold; color: #fff; background: #22608d; cursor: default; border-color: #22608d }
       }
@@ -39,7 +39,6 @@
     }
   }
 }
-
 
 .days-container{
   display: table; width: 100%; border: 1px solid #ccc;
