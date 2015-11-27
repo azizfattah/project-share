@@ -35,7 +35,7 @@
         = t("conversations.new.send_message_to_user", person: author_link).html_safe
       .row
         .col-12
-          = text_area_tag(:message, 'Hello', :class => "text_area")
+          = text_area_tag(:message,nil, :class => "text_area")
 
       - if quantity
         = hidden_field_tag(:quantity, quantity)

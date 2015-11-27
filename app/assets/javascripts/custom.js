@@ -1,9 +1,12 @@
 $(document).ready(function () {
     $('#checkout_button_transaction').click(function () {
-        $('body').waitMe({
-            effect: 'win8',
-            text: '',
-            color: '#000',
-        });
+        if( $('#message').val().length > 0){
+            $('body').waitMe({
+                effect: 'win8',
+                text: '',
+                color: '#000',
+            });
+        }
+
     });
 });
