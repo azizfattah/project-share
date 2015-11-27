@@ -29,7 +29,6 @@
 #  payment_process                   :string(31)       default("none")
 #  delivery_method                   :string(31)       default("none")
 #  shipping_price_cents              :integer
-#  service_charge_in_cent            :integer
 #  deleted                           :boolean          default(FALSE)
 #
 # Indexes
@@ -63,7 +62,8 @@ class Transaction < ActiveRecord::Base
     :unit_tr_key,
     :unit_selector_tr_key,
     :shipping_price,
-    :delivery_method
+    :delivery_method,
+    :service_charge_in_cent
   )
 
   attr_accessor :contract_agreed
