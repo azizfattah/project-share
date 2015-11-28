@@ -101,7 +101,7 @@ class TransactionsController < ApplicationController
                                                       {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
-    
+
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
 
   end
@@ -202,13 +202,16 @@ class TransactionsController < ApplicationController
                   content: form[:message],
                   booking_fields: booking_fields,
                   payment_gateway: process[:process] == :none ? :none : gateway, # TODO This is a bit awkward
-                  payment_process: process[:process]}
+                  payment_process: process[:process],
+                  service_charge_in_cent: session[:service_charge]
+              }
           })
     }
     ).on_success { |(_, (_, _, _, process), _, _, tx)|
       after_create_actions!(process: process, transaction: tx[:transaction], community_id: @current_community.id)
       flash[:notice] = after_create_flash(process: process) # add more params here when needed
-      redirect_to after_create_redirect(process: process, starter_id: @current_user.id, transaction: tx[:transaction]) # add more params here when needed
+      express_checkout
+      # redirect_to after_create_redirect(process: process, starter_id: @current_user.id, transaction: tx[:transaction]) # add more params here when needed
     }.on_error { |error_msg, data|
       flash[:error] = Maybe(data)[:error_tr_key].map { |tr_key| t(tr_key) }.or_else("Could not start a transaction, error message: #{error_msg}")
       redirect_to (session[:return_to_content] || root)
@@ -407,6 +410,7 @@ class TransactionsController < ApplicationController
       quantity = tx[:listing_quantity]
       show_subtotal = !!tx[:booking] || quantity.present? && quantity > 1 || tx[:shipping_price].present?
       total_label = (tx[:payment_process] != :preauthorize) ? t("transactions.price") : t("transactions.total")
+      service_charge_in_cent = Transaction.find(tx[:id]).service_charge_in_cent || 0
 
       TransactionViewUtils.price_break_down_locals({
                                                        listing_price: tx[:listing_price],
@@ -420,6 +424,7 @@ class TransactionsController < ApplicationController
                                                        subtotal: show_subtotal ? tx[:listing_price] * quantity : nil,
                                                        total: Maybe(tx[:payment_total]).or_else(tx[:checkout_total]),
                                                        shipping_price: tx[:shipping_price],
+                                                       service_charge: service_charge_in_cent / 100,
                                                        total_label: total_label
                                                    })
     end

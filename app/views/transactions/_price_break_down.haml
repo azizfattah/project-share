@@ -42,13 +42,21 @@
       %span.initiate-transaction-shipping-price-value
         = humanized_money_with_symbol(shipping_price)
 
-  - if total.present?
+  - if service_charge.present?
     .initiate-transaction-shipping-price-wrapper
       %span.initiate-transaction-shipping-price-label
-        = "Service Charge"
+        = t("transactions.initiate.shipping-price")
+      %span.initiate-transaction-shipping-price-value
+        = number_to_currency(service_charge)
+  - service_charge_in_dollor = @service_charge || service_charge
+  - if @service_charge.present?
+    .initiate-transaction-shipping-price-wrapper
+      %span.initiate-transaction-shipping-price-label
+        = t("transactions.initiate.service-charge")
       %span.initiate-transaction-shipping-price-value
         = number_to_currency(@service_charge)
 
+  - if total.present?
     .initiate-transaction-total-wrapper
       %span.initiate-transaction-total-label
         - if total_label.present?
@@ -56,7 +64,7 @@
         - else
           = t("transactions.total")
       %span.initiate-transaction-total-value
-        - net_total = total.to_i + @service_charge
+        - net_total = total.to_i + service_charge_in_dollor.to_i
         = number_to_currency(net_total)
 
 

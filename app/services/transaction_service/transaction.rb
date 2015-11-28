@@ -187,7 +187,6 @@ module TransactionService::Transaction
     item_total = tx[:unit_price] * tx[:listing_quantity]
     commission_total = calculate_commission(item_total, tx[:commission_from_seller], tx[:minimum_commission])
 
-
     DataTypes.create_transaction(
       {
         id: tx[:id],
@@ -203,6 +202,7 @@ module TransactionService::Transaction
         unit_selector_tr_key: tx[:unit_selector_tr_key],
         item_total: item_total,
         shipping_price: tx[:shipping_price],
+        service_charge: tx[:service_charge_in_cent],
         listing_author_id: tx[:listing_author_id],
         listing_quantity: tx[:listing_quantity],
         automatic_confirmation_after_days: tx[:automatic_confirmation_after_days],

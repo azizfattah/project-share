@@ -46,9 +46,12 @@ function prepare_ajax_form(form_id, locale, rules) {
 
 function disable_submit_button(form_id, locale) {
   $(form_id).find("button").attr('disabled', 'disabled');
-  jQuery.getJSON('/assets/locales/' + locale + '.json', function(json) {
-    $(form_id).find("button").text(json.please_wait);
-  });
+    jQuery.getJSON('/assets/locales/' + locale + '.json', function(json) {
+        var button = $(form_id).find("button");
+        if(button[0].id !== 'checkout_button_transaction'){
+            button[0].text(json.please_wait);
+        }
+    });
 }
 
 function auto_resize_text_areas(class_name) {

@@ -25,6 +25,7 @@
 
 //= require selectize-standalone.js
 //= require datepicker/bootstrap-datepicker.js
+//= require waitMe.min.js
 
 // Allow IE8-9 to post cross domain XHR (required for image upload)
 //= require jquery.iframe-transport.js
@@ -72,4 +73,5 @@
 //= require paypal_account_settings
 //= require transaction
 //= require listing_form
+//= require custom
 //= require_self

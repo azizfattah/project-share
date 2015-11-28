@@ -26,3 +26,12 @@
     vertical-align:middle;
 }
 
+.clear_background, .clear_background:hover, .clear_background:active {
+    background: #fff;
+    border: none;
+    border-radius: 0;
+    margin:  0;
+    padding: 0;
+    border: 0;
+    display: table;
+}

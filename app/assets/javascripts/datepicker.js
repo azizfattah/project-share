@@ -23,7 +23,6 @@ window.ST = window.ST || {};
 
                     beforeShowDay: function (date) {
                         date = getFormattedDate(date)
-                        debugger;
                         return booking_date_array.indexOf(date) >= 0 ? 'disabled': 0;
                     },
                     rtl: dateRage.css("direction") == "rtl"
