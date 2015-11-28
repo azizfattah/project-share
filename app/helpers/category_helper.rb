@@ -1,6 +1,6 @@
 module CategoryHelper
   def category_options_html_for(category)
-    html = ""
+html = "<option value=''>#{t(".no_parent")}</option>"
     selected_id = category.id
     categories = @current_community.top_level_categories
 
