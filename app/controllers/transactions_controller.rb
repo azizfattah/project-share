@@ -54,6 +54,7 @@ class TransactionsController < ApplicationController
             0
           end
           total_amount_in_cent += date_price
+          rent_date = rent_date.next_day
         end
         number_of_days = end_date.mjd - start_date.mjd + 1
 
@@ -70,6 +71,7 @@ class TransactionsController < ApplicationController
 
         @service_charge = service_charge_in_cent / 100
 
+        session[:subtotal] = total_amount_in_cent
         total_amount_in_cent = total_amount_in_cent + service_charge_in_cent
 
         session[:amount] = total_amount_in_cent
@@ -470,7 +472,7 @@ class TransactionsController < ApplicationController
               end_on: booking_end,
               duration: duration,
               quantity: quantity,
-              subtotal: quantity != 1 ? listing_model.price * quantity : nil,
+              subtotal: quantity != 1 ? Money.new(session[:subtotal], 'USD') : nil,
               total: Money.new(session[:amount], 'USD'),
               shipping_price: nil,
               total_label: total_label

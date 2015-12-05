@@ -10,6 +10,7 @@
   = render :partial => "listings/form/origin", :locals => { :form => form, :origin_loc => @listing.origin_loc }
   = render :partial => "listings/form/googlemap", :locals => { :form => form, :run_js_immediately => run_js_immediately}
   = render :partial => "listings/form/images", :locals => { :form => form, :run_js_immediately => run_js_immediately }
+  = link_to t(".edit_calendar"), calendar_listing_path(@listing), {target: '_blank'}
   = render :partial => "listings/form/visibility", :locals => { :form => form }
   = render :partial => "listings/form/privacy", :locals => { :form => form }
   = render :partial => "listings/form/send_button", :locals => { :form => form }

@@ -18,9 +18,9 @@
             .tile-price
               %span.js-price-field
                 - if price_tag.present?
-                  = "$#{price_tag.price}"
+                  = "$#{price_tag.price.to_i}"
                 - else
-                  = "$#{@listing.price.to_s}"
+                  = "$#{@listing.price.to_i}"
 
 
 /  = link_to "Previous", start_date: date_range.first - 1.day

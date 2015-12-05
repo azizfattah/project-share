@@ -43,6 +43,7 @@
         price_tag = $(e.currentTarget).data("priceTag")
         cell_date = new Date($(e.currentTarget).data("cellDate"))
         populate_availability_form(price_tag, cell_date, e.currentTarget)
+        $('.js-price-form').show()
 
       $("input[name=listing_available]").change (e)->
         if $(e.currentTarget).val() == "false"
@@ -69,6 +70,8 @@
           success: (data)->
             day_cell = $($("#js-price-tag-form").data("day_cell"))
             populate_cell(day_cell, data)
+            $('.js-price-form').hide()
+
 
 / Page Header start
 / %header.header{:style => "background:url('/assets/header.png') no-repeat;"}
@@ -80,7 +83,7 @@
 / Page Search End
 / Page Content start
 - content_for :title_header do
-  %h1= t("listings.calender.new_title")
+  %h1= t("listings.calendar.new_title")
 
 / Developer will use the following code to add the calendar
 .calendar-wrapper.clearfix
@@ -97,14 +100,14 @@
             %li
               =link_to t("datepicker.months.#{month_start.strftime('%B').downcase}"), {start_date: month_start}, {class: (month_start.month == @current_date.month && 'current')}
               - month_start=month_start.next_month
-    = render partial: "calender", locals: {price_tags: @price_tags}
+    = render partial: "calendar", locals: {price_tags: @price_tags}
   #js-price-tag-form.selected-content
-    .edit-day-form
+    .edit-day-form.js-price-instructions
       .day-form-content
         = t('.select_any_day_to')
         %strong= t('.edit')
         = t('.it')
-    .edit-day-form
+    .edit-day-form.js-price-form{style: 'display:none;'}
       %p.form-title
         %strong
           %span= t(".edit_status")

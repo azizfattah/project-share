@@ -1429,6 +1429,7 @@ ar:
       show_in_updates_email_loading: جاري التحميل...
       show_in_updates_email_error: "لا يمكن أن تصل إلى الخادم. حاول مرة أخرى بعد تحديث الصفحة."
       show_in_updates_email_success: "هذا المعروض سوف يتم عرضة في البريد الالكتروني الدوري الذي يتم ارسالة للأعضاء"
+      edit_calendar: "تغيير الاسعار"
     error:
       something_went_wrong: "حدث خطأ ما، رمز الخطأ: %{error_code}"
     follow_links:
@@ -1652,7 +1653,7 @@ ar:
       month: شهر
     verification_required:
       verification_required: "مطلوب التحقق "
-    calender:
+    calendar:
       new_title: تعديل المعروض
       click_to_edit: اضغط لتعديل السعر
       select_any_day_to: قم بإختيار يوما

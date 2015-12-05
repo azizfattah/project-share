@@ -117,6 +117,10 @@
           = icon_tag("edit", ["icon-part"])
           .text-part= t("listings.edit_links.edit_listing")
       .listing-view-admin-link
+        %a.icon-with-text-container{href: calendar_listing_path(@listing)}
+          = icon_tag("calendar", ["icon-part"])
+          .text-part= t("listings.edit_links.edit_calendar")
+      .listing-view-admin-link
         %a.icon-with-text-container{href: close_person_listing_path(@current_user, @listing), data: { method: "put", remote: "true"}}
           = icon_tag("lock", ["icon-part"])
           .text-part= t("listings.edit_links.close_listing")
