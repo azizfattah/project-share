@@ -22,6 +22,7 @@
 //= require jquery.fileupload-validate
 //= require jquery.fileupload-image
 //= require chosen_v1.4.2/chosen.jquery.js
+//= require jquery.tooltipster.min
 
 //= require selectize-standalone.js
 //= require datepicker/bootstrap-datepicker.js

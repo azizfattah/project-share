@@ -2,7 +2,7 @@ window.ST = window.ST || {};
 
 (function (module) {
 
-    module.initializeFromToDatePicker = function (rangeCongainerId) {
+    module.initializeFromToDatePicker = function (rangeCongainerId, price_tags, default_price) {
         var now = new Date();
         var today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
         var dateRage = $('#' + rangeCongainerId);
@@ -23,8 +23,27 @@ window.ST = window.ST || {};
 
                     beforeShowDay: function (date) {
                         date = getFormattedDate(date)
-                        debugger;
-                        return booking_date_array.indexOf(date) >= 0 ? 'disabled': 0;
+                        var options = {}
+                        var current_price_date = jQuery.grep(price_tags, function(price_tag){
+                            return (price_tag.date == date)
+                        });
+
+                        if(booking_date_array.indexOf(date) >= 0){
+                            options['enabled'] = false
+                        }else if(current_price_date.length > 0){
+                            price_tag = current_price_date[0];
+                            if (price_tag.available){
+                                options['tooltip'] = price_tag.price;
+                                options['classes'] = 'price-tooltip';
+                            } else{
+                                options['enabled'] = false;
+                            };
+                        }else{
+                            options['tooltip'] = default_price;
+                            options['classes'] = 'price-tooltip';
+
+                        }
+                        return options;
                     },
                     rtl: dateRage.css("direction") == "rtl"
                 };
@@ -33,7 +52,10 @@ window.ST = window.ST || {};
                     options.language = dateLocale;
                 }
 
-                var picker = dateRage.datepicker(options);
+                var picker = dateRage.datepicker(options)
+                    .on("show", function(e){
+                        $('.price-tooltip').tooltipster();
+                });
 
                 var outputElements = {
                     "booking-start-output": $("#booking-start-output"),

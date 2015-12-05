@@ -58,8 +58,9 @@
                   form.submit();
                 }
               });
-
-              window.ST.initializeFromToDatePicker('datepicker');
+              var price_tags = JSON.parse('#{@price_tags.to_json.to_s.html_safe}');
+              var default_price = "#{@listing.price_cents}";
+              window.ST.initializeFromToDatePicker('datepicker', price_tags, default_price);
           .input-daterange.input-group.clearfix#datepicker{:data => {:locale => I18n.locale, :dateformat => t("datepicker.format")}}
             .datepicker-start-wrapper
               = label_tag t(".booking_from")

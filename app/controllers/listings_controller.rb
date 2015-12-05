@@ -156,7 +156,7 @@ class ListingsController < ApplicationController
     form_path = new_transaction_path(listing_id: @listing.id)
 
     delivery_opts = delivery_config(@listing.require_shipping_address, @listing.pickup_enabled, @listing.shipping_price, @listing.shipping_price_additional, @listing.currency)
-
+    @price_tags = @listing.price_tags
     render locals: {
              form_path: form_path,
              payment_gateway: payment_gateway,
