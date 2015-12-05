@@ -1,10 +1,10 @@
 .initiate-transaction-totals
   - if booking
-    .initiate-transaction-per-unit-wrapper
-      %span.initiate-transaction-per-unit-label
-        = t("transactions.initiate.price_per_day")
-      %span.initiate-transaction-per-unit-value
-        = humanized_money_with_symbol(listing_price)
+    / .initiate-transaction-per-unit-wrapper
+    /   %span.initiate-transaction-per-unit-label
+    /     = t("transactions.initiate.price_per_day")
+    /   %span.initiate-transaction-per-unit-value
+    /     = humanized_money_with_symbol(listing_price)
 
     .initiate-transaction-booking-wrapper
       %span.initiate-transaction-booking-label
@@ -16,11 +16,11 @@
         = "(#{pluralize(duration, t("listing_conversations.preauthorize.day"), t("listing_conversations.preauthorize.days"))})"
 
   - elsif quantity.present? && localized_unit_type.present?
-    .initiate-transaction-per-unit-wrapper
-      %span.initiate-transaction-per-unit-label
-        = t("transactions.price_per_quantity", unit_type: localized_unit_type)
-      %span.initiate-transaction-per-unit-value
-        = humanized_money_with_symbol(listing_price)
+    / .initiate-transaction-per-unit-wrapper
+    /   %span.initiate-transaction-per-unit-label
+    /     = t("transactions.price_per_quantity", unit_type: localized_unit_type)
+    /   %span.initiate-transaction-per-unit-value
+    /     = humanized_money_with_symbol(listing_price)
     - if quantity > 1
       .initiate-transaction-quantity-wrapper
         %span.initiate-transaction-quantity-label

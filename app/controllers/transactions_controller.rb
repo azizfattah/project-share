@@ -33,19 +33,34 @@ class TransactionsController < ApplicationController
       transaction_params = HashUtils.symbolize_keys({listing_id: listing_model.id}.merge(params.slice(:start_on, :end_on, :quantity, :delivery)))
 
       if transaction_params[:start_on].present? && transaction_params[:end_on].present?
+        @listing = Listing.find(params[:listing_id])
+
         start_date = Date.parse(transaction_params[:start_on])
         session[:start_date] = transaction_params[:start_on]
 
         end_date = Date.parse(transaction_params[:end_on])
         session[:end_date] = transaction_params[:end_on]
 
+        rent_date = start_date
+        total_amount_in_cent = 0
+        price_tags = @listing.price_tags.within_date(start_date, end_date)
+        for i in start_date.mjd..end_date.mjd
+          index = price_tags.index{|tag| tag.date == rent_date}
+          date_price = if index.blank?
+            @listing.price_cents
+          elsif price_tags[index].available
+            (price_tags[index].price * 100)
+          else
+            0
+          end
+          total_amount_in_cent += date_price
+        end
         number_of_days = end_date.mjd - start_date.mjd + 1
 
         session[:number_of_days] = number_of_days
 
-        @listing = Listing.find(params[:listing_id])
 
-        total_amount_in_cent = number_of_days * @listing.price_cents
+        # total_amount_in_cent = number_of_days * @listing.price_cents
 
         community_id = PaypalAccount.where(active: true).where("paypal_accounts.community_id IS NOT NULL && paypal_accounts.person_id IS NULL").first.community_id
 
@@ -59,7 +74,6 @@ class TransactionsController < ApplicationController
 
         session[:amount] = total_amount_in_cent
         session[:service_charge] = service_charge_in_cent
-
       end
 
       if params[:listing_id].present?
@@ -101,7 +115,7 @@ class TransactionsController < ApplicationController
                                                       {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
-    
+
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
 
   end
@@ -445,7 +459,6 @@ class TransactionsController < ApplicationController
     duration = booking ? DateUtils.duration_days(booking_start, booking_end) : nil
     quantity = Maybe(booking ? DateUtils.duration_days(booking_start, booking_end) : TransactionViewUtils.parse_quantity(params[:quantity])).or_else(1)
     total_label = t("transactions.price")
-
     m_price_break_down = Maybe(listing_model).select { |listing_model| listing_model.price.present? }.map { |listing_model|
       TransactionViewUtils.price_break_down_locals(
           {
@@ -458,7 +471,7 @@ class TransactionsController < ApplicationController
               duration: duration,
               quantity: quantity,
               subtotal: quantity != 1 ? listing_model.price * quantity : nil,
-              total: listing_model.price * quantity,
+              total: Money.new(session[:amount], 'USD'),
               shipping_price: nil,
               total_label: total_label
           })

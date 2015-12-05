@@ -20,6 +20,8 @@ class PriceTag < ActiveRecord::Base
   attr_accessible :available, :date, :price, :listing_id
   validates :date, :listing, presence: true
 
+  scope :within_date, ->(start_date, end_date){where('date >= ? AND date <= ?', start_date, end_date)}
+  scope :available, where(available: true)
   def as_json(*args)
     super(except: [:created_at, :updated_at])
   end

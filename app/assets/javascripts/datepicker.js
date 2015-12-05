@@ -33,13 +33,13 @@ window.ST = window.ST || {};
                         }else if(current_price_date.length > 0){
                             price_tag = current_price_date[0];
                             if (price_tag.available){
-                                options['tooltip'] = price_tag.price;
+                                options['tooltip'] = ('$'+price_tag.price);
                                 options['classes'] = 'price-tooltip';
                             } else{
                                 options['enabled'] = false;
                             };
                         }else{
-                            options['tooltip'] = default_price;
+                            options['tooltip'] = ('$'+default_price/100);
                             options['classes'] = 'price-tooltip';
 
                         }
