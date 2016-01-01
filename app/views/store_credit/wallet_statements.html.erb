@@ -1,0 +1,27 @@
+<%= render :partial => "layouts/left_hand_navigation", :locals => { :links => settings_links_for(@current_user, @current_community) } %>
+<div class="left-navi-section settings-section">
+  <% if @my_wallet_transfer.blank? %>
+    <%= "No Wallet Transaction For You" %> 
+  <% else %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Requestor</th>
+          <th>Amount</th>
+          <th>transaction No.</th>
+          <th>status</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% @my_wallet_transfer.each do |trans| %>
+            <tr>
+              <td><%= trans.person.username%></td>
+              <td><%= trans.amount_cents %></td>
+              <td><%= trans.trans_no%></td>
+              <td><%= trans.status%></td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>

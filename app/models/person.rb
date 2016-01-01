@@ -90,6 +90,7 @@ class Person < ActiveRecord::Base
   attr_accessor :login
 
   attr_protected :is_admin
+  after_create :initial_store_credits
 
   has_many :listings, :dependent => :destroy, :foreign_key => "author_id", :conditions => { :deleted => 0 }
   has_many :emails, :dependent => :destroy, :inverse_of => :person
@@ -116,7 +117,8 @@ class Person < ActiveRecord::Base
   has_many :followed_people, :through => :inverse_follower_relationships, :source => "person"
 
   has_and_belongs_to_many :followed_listings, :class_name => "Listing", :join_table => "listing_followers"
-
+  has_many :store_credits
+  has_many :wallet_transfers
   def to_param
     username
   end

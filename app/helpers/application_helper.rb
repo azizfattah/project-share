@@ -617,6 +617,12 @@ module ApplicationHelper
         :name => "menu_links"
       },
       {
+        :text => t("admin.communities.menu_links.wallet_transfer"),
+        :icon_class => icon_class("link"),
+        :path => admin_wallet_trans_request_index_path,
+        :name => "wallet_transfer"
+      },
+      {
         :text => t("admin.categories.index.listing_categories"),
         :icon_class => icon_class("list"),
         :path => admin_categories_path,
@@ -658,7 +664,6 @@ module ApplicationHelper
         :name => "payment_gateways"
       }
     end
-
     links << {
       :text => t("admin.communities.social_media.social_media"),
       :icon_class => icon_class("social_media"),
@@ -700,6 +705,27 @@ module ApplicationHelper
   def settings_links_for(person, community=nil)
     links = [
       {
+        :id => "settings-tab-wallet",
+       :text => t("layouts.settings.wallet"),
+       :icon_class => icon_class("wallet"),
+       :path => wallet_path(person),
+       :name => "wallet"
+     },
+     {
+       :id => "settings-tab-wallet_statements",
+       :text => t("layouts.settings.wallet_statements"),
+       :icon_class => icon_class("wallet_statements"),
+       :path => wallet_statements_path(person),
+       :name => "wallet_statements"
+     },
+      {
+        :id => "settings-tab-order_all",
+       :text => t("layouts.settings.order_all"),
+       :icon_class => icon_class("wallet"),
+       :path => order_all_path(person),
+       :name => "order_all"
+     },
+     {
         :id => "settings-tab-profile",
         :text => t("layouts.settings.profile"),
         :icon_class => icon_class("profile"),

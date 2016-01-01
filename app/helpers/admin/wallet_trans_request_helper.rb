@@ -1,0 +1,2 @@
+module Admin::WalletTransRequestHelper
+end

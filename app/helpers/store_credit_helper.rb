@@ -1,0 +1,2 @@
+module StoreCreditHelper
+end

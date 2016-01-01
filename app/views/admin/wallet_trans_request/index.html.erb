@@ -1,0 +1,29 @@
+<%= render :partial => "admin/left_hand_navigation", :locals => { :links => admin_links_for(@current_community) } %>
+<div class="left-navi-section settings-section">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Requestor</th>
+        <th>Amount</th>
+        <th>transaction No.</th>
+        <th>status</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @wallet_transfer_requests.each do |trans| %>
+      <tr>
+        <td><%= trans.person.username%></td>
+        <td><%= trans.amount_cents %></td>
+        <td><%= trans.trans_no%></td>
+        <td>
+          <%if trans.status == "pending" %>
+          <%= link_to "Approve", admin_wallet_trans_request_approve_path(:transaction => trans.id) %>/<%= link_to "Reject", admin_wallet_trans_request_reject_path(:transaction => trans.id) %> 
+          <%else%>
+          <%= trans.status %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -37,6 +37,9 @@ Kassi::Application.routes.draw do
   # Prettier link for admin panel
   namespace :admin do
     match '' => "communities#getting_started"
+      get "wallet_trans_request/index"
+      get "wallet_trans_request/approve"
+      get "wallet_trans_request/reject"
   end
 
   # Internal API
@@ -102,6 +105,13 @@ Kassi::Application.routes.draw do
     match '/:person_id/settings/payments/paypal_account/new' => 'paypal_accounts#new', :as => :new_paypal_account_settings_payment
     match '/:person_id/settings/payments/paypal_account/show' => 'paypal_accounts#show', :as => :show_paypal_account_settings_payment
     match '/:person_id/settings/payments/paypal_account/create' => 'paypal_accounts#create', :as => :create_paypal_account_settings_payment
+    match '/:person_id/settings/store_credit/wallet' => 'store_credit#wallet', :as => :wallet 
+    match '/:person_id/settings/store_credit/wallet_statements' => 'store_credit#wallet_statements', :as => :wallet_statements 
+    match '/:person_id/settings/store_credit/add_to_wallet' => 'store_credit#add_to_wallet', :as => :add_to_wallet , method: :get
+    match '/:person_id/settings/store_credit/success' => 'store_credit#success', :as => :add_to_wallet_success 
+    match '/:person_id/settings/store_credit/pay_by_wallet' => 'store_credit#pay_by_wallet', :as => :pay_by_wallet
+    match '/:person_id/settings/wallet_transfer' => "wallet_transfers#create", :as => :wallet_transfer , method: :post
+    match  '/:person_id/settings/order_all' => 'settings#order_all', :as => :order_all
 
     namespace :paypal_service do
       resources :checkout_orders do
@@ -351,10 +361,14 @@ Kassi::Application.routes.draw do
           end
         end
 
+        #resources :wallet_transfers, only: [:index] 
+
         resources :transactions,  only: [:show, :new, :create] do
           collection do
             get :express_checkout
+            get :pay_from_wallet
             get :status
+            get :status_wallet
           end
         end
 

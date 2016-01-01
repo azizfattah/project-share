@@ -1,0 +1,39 @@
+Your wallet balance : <%= humanized_money_with_symbol @current_person.balance %></br>
+Amount to be paid : :<%= humanized_money_with_symbol session[:amount]/100 %></br>
+<% if @current_person.balance > 0 %>
+<label for="Pay_By_Wallet">
+<!--     <input type="checkbox" id="chkPassport" /> -->
+    
+    <%= check_box_tag "Pay By Wallet" %>Pay From Wallet : <%= humanized_money_with_symbol session[:amount]/100 %></br>
+</label>
+	<div id="dvPassport" style="display: none">
+	<% rem_bal = (session[:amount]- @current_person.store_credits.last.balance_cents)/100 %>
+    <%= humanized_money_with_symbol @current_person.balance.to_i %> will be deducted from wallet + <%= humanized_money_with_symbol rem_bal %> will be deducted from paypal
+    <%= link_to "Pay From Wallet", "pay_from_wallet", :class => 'wallet_buttuon' %>
+    </div>
+<% else %>
+ insufficent balance in wallet pay with paypal
+<% end %>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $("#Pay_By_Wallet").click(function () {
+            if ($(this).is(":checked")) {
+                $("#dvPassport").show();
+            } else {
+                $("#dvPassport").hide();
+            }
+        });
+    });
+</script>
+<style type="text/css">
+    .wallet_buttuon{
+        display: block;
+        height: 29px;
+        width: 119px;
+        color: #FFF;
+        background: none repeat scroll 0% 0% #A64C5D;
+        border-right: 3px none;
+        text-align: center;
+    }
+</style>

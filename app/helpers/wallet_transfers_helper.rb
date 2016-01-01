@@ -1,0 +1,2 @@
+module WalletTransfersHelper
+end

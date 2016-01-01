@@ -18,6 +18,70 @@ class TransactionsController < ApplicationController
       [:end_on, transform_with: ->(v) { Maybe(v).map { |d| TransactionViewUtils.parse_booking_date(d) }.or_else(nil) }]
   )
 
+  def transaction_all
+    @transactions =  Transaction.all
+  end
+  def pay_from_wallet
+    wallet_bal = @current_person.store_credits.last.balance_cents
+    bal = @current_person.store_credits.last.balance_cents - session[:amount].to_i
+    if bal < 0     
+      a=@current_person.store_credits.new(:amount_cents => params[:amount], trans_type: "wallet_deduction", balance_cents: 000)
+        a.save!
+        new_amount= bal.abs
+        session[:amount] = new_amount
+        listing = Listing.find(session[:listing_id].to_f)
+        response = EXPRESS_GATEWAY.setup_purchase(session[:amount].to_f,
+                                            ip: request.remote_ip,
+                                            return_url: "http://esignature.lvh.me:3000/en/transactions/status_wallet",
+                                            cancel_return_url: "http://esignature.lvh.me:3000/",
+                                            currency: "USD",
+                                            allow_guest_checkout: true,
+                                            items: [{name: listing.title, description: listing.description, quantity: session[:number_of_days], amount: ((session[:amount] - session[:service_charge]).to_f/session[:number_of_days])},
+                                            {name: "Service Charge", amount: session[:service_charge]}
+                                              ]
+    )
+    redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
+      else
+        a=@current_person.store_credits.new(:amount_cents => params[:amount], trans_type: "wallet_deduction", balance_cents: bal)
+        a.save!
+        redirect_to status_person_transactions_path(person_id: @current_person.id, :payed_from_wallet => 1)
+    end
+  end
+
+  def status_wallet
+    if (params[:token].present? && params[:PayerID].present?)
+      listing = Listing.find(session[:listing_id].to_f)
+      token = params[:token]
+      @response = EXPRESS_GATEWAY.details_for(token).params
+      express_purchase_options = {
+          :ip => request.remote_ip,
+          :token => params[:token],
+          :payer_id => params[:PayerID],
+          items: [{name: listing.title + "( Start Date: "+ session[:start_date] + "   End Date: "+ session[:end_date] + ")", description: listing.description, quantity: session[:number_of_days], amount: session[:amount] - session[:service_charge]},
+                  {name: "Service Charge", amount: session[:service_charge]}
+          ]
+      }
+
+      response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
+
+      if response.message == "Success"
+        listing = Listing.find(session[:listing_id].to_f)
+        BookingInfo.create!(listing_id: listing.id, start_on:  session[:start_date].to_date, end_on:  session[:end_date].to_date)
+        render 'status_wallet'
+      else
+        render 'status_error'
+      end
+      reset_session_params
+    elsif params[:payed_from_wallet]
+      listing = Listing.find(session[:listing_id].to_f)
+      BookingInfo.create!(listing_id: listing.id, start_on:  session[:start_date].to_date, end_on:  session[:end_date].to_date)
+      reset_session_params
+    else
+      reset_session_params
+      redirect_to  homepage_without_locale_path
+    end
+
+  end
 
   def new
     Result.all(
@@ -101,7 +165,6 @@ class TransactionsController < ApplicationController
                                                       {name: "Service Charge", amount: session[:service_charge]}
                                               ]
     )
-
     redirect_to EXPRESS_GATEWAY.redirect_url_for(response.token)
 
   end
@@ -119,10 +182,7 @@ class TransactionsController < ApplicationController
                   {name: "Service Charge", amount: session[:service_charge]}
           ]
       }
-
       response = EXPRESS_GATEWAY.purchase(session[:amount].to_f, express_purchase_options)
-
-
       if response.message == "Success"
         listing = Listing.find(session[:listing_id].to_f)
         BookingInfo.create!(listing_id: listing.id, start_on:  session[:start_date].to_date, end_on:  session[:end_date].to_date)
@@ -168,7 +228,6 @@ class TransactionsController < ApplicationController
   end
 
   def create
-
     Result.all(
     ->() {
       TransactionForm.validate(params)

@@ -388,6 +388,7 @@ en:
       support: Support
     listing_shapes:
       index:
+        store_credits: "Store Credits" 
         listing_shapes: "Order types"
         description: "Order types determine how the order process works in your site. You can decide whether your users are renting or selling, or perhaps just posting announcements and communicating via free messages."
         read_more_about_order_types: "Read more about order types"
@@ -1395,6 +1396,7 @@ en:
       listing_author_payment_details_missing: "Please contact the author by pressing the 'Contact' button below. They need to update their payment details to receive payments."
       stylesheet_needs_recompiling: "Stylesheet is recompiling. Please, reload the page after a while."
     settings:
+      wallet: Wallet
       account: Account
       notifications: Notifications
       profile: "Profile info"

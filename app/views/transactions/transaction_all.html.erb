@@ -1,0 +1,29 @@
+<%= render :partial => "layouts/left_hand_navigation", :locals => { :links => settings_links_for(@current_user, @current_community) } %>
+<div class="left-navi-section settings-section">
+  <%# if @transactions.present? %>
+    <%#= "No Transaction For You" %> 
+  <%# else %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Transaction Type</th>
+          <th>PaymentMode</th>
+          <th>Amount</th>
+          <th>Transaction No.</th>
+        </tr>
+      </thead>
+      <tbody>
+          <% @transactions.each do |trans| %>
+            <tr>
+              <td><%= trans.created_at%></td>
+              <td><%= trans.current_state %></td>
+              <td><%= trans.payment_gateway%></td>
+              <td><%= trans.unit_price_cents/100%></td>
+              <td><%= trans.id%></td>
+            </tr>
+          <% end %>
+      </tbody>
+    </table>
+  <%# end %>
+</div>
